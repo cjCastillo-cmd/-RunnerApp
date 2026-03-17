@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Colores principales Runner App -->
-    <color name="black">#FF000000</color>
-    <color name="volt">#FFC8FF00</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Fondos -->
+    <color name="background">#FF0D1117</color>
+    <color name="surface">#FF161B22</color>
+    <color name="border">#FF30363D</color>
 
     <!-- Texto -->
-    <color name="text_secondary">#FF999999</color>
-    <color name="text_tertiary">#FF555555</color>
+    <color name="text_primary">#FFE6EDF3</color>
+    <color name="text_secondary">#FF8B949E</color>
+    <color name="text_tertiary">#FF484F58</color>
 
-    <!-- Superficies -->
-    <color name="surface">#FF141414</color>
-    <color name="border">#FF2A2A2A</color>
+    <!-- Acento principal -->
+    <color name="accent">#FF4D8AFF</color>
+    <color name="accent_on">#FFFFFFFF</color>
 
     <!-- Acentos semanticos -->
-    <color name="orange">#FFFF9F0A</color>
-    <color name="blue">#FF0A84FF</color>
-    <color name="red">#FFFF3B30</color>
-    <color name="green">#FF30D158</color>
+    <color name="green">#FF3FB950</color>
+    <color name="amber">#FFD29922</color>
+    <color name="cyan">#FF39D2C0</color>
+    <color name="red">#FFF85149</color>
 
-    <!-- Volt con transparencia para glows -->
-    <color name="volt_20">#33C8FF00</color>
-    <color name="volt_40">#66C8FF00</color>
-    <color name="volt_60">#99C8FF00</color>
+    <!-- Acento con transparencia para glows -->
+    <color name="accent_20">#334D8AFF</color>
+    <color name="accent_40">#664D8AFF</color>
 
-    <!-- Overlay -->
-    <color name="black_50">#80000000</color>
+    <!-- Compatibilidad (aliases) -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="volt">@color/accent</color>
+    <color name="orange">@color/amber</color>
+    <color name="blue">@color/cyan</color>
+    <color name="volt_20">@color/accent_20</color>
+    <color name="volt_40">@color/accent_40</color>
+    <color name="volt_60">@color/accent_40</color>
+    <color name="black_50">#800D1117</color>
 </resources>

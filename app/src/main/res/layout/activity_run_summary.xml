@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/background"
     android:padding="24dp">
 
     <!-- Titulo celebratorio -->
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="@string/title_run_completed"
         android:textSize="13sp"
-        android:textColor="@color/volt"
+        android:textColor="@color/accent"
         android:letterSpacing="0.3"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:text="@string/default_km"
         android:textSize="96sp"
-        android:textColor="@color/white"
-        android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/text_primary"
+        android:fontFamily="sans-serif-medium"
         android:textStyle="bold"
         android:includeFontPadding="false"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
@@ -44,8 +44,8 @@
         android:layout_height="wrap_content"
         android:text="@string/label_kilometers"
         android:textSize="16sp"
-        android:textColor="@color/volt"
-        android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/accent"
+        android:fontFamily="sans-serif-medium"
         android:textStyle="bold"
         android:letterSpacing="0.2"
         app:layout_constraintTop_toBottomOf="@id/tvKm"
@@ -93,8 +93,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/default_duration"
                 android:textSize="28sp"
-                android:textColor="@color/white"
-                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/text_primary"
+                android:fontFamily="sans-serif-medium"
                 android:textStyle="bold"
                 android:includeFontPadding="false" />
 
@@ -125,7 +125,7 @@
                 android:text="@string/default_zero"
                 android:textSize="28sp"
                 android:textColor="@color/orange"
-                android:fontFamily="sans-serif-condensed"
+                android:fontFamily="sans-serif-medium"
                 android:textStyle="bold"
                 android:includeFontPadding="false" />
 
@@ -156,7 +156,7 @@
                 android:text="@string/default_pace"
                 android:textSize="28sp"
                 android:textColor="@color/blue"
-                android:fontFamily="sans-serif-condensed"
+                android:fontFamily="sans-serif-medium"
                 android:textStyle="bold"
                 android:includeFontPadding="false" />
 
