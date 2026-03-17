@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Runner App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --surface-2: #1c1c1c;
+            --surface-3: #262626;
+            --border: #2a2a2a;
+            --white: #ffffff;
+            --text: #ffffff;
+            --text-2: #999999;
+            --text-3: #555555;
+            --volt: #c8ff00;
+            --volt-dim: rgba(200,255,0,.08);
+            --volt-mid: rgba(200,255,0,.2);
+            --red: #ff3b30;
+            --red-dim: rgba(255,59,48,.1);
+            --green: #30d158;
+            --green-dim: rgba(48,209,88,.1);
+            --orange: #ff9f0a;
+            --orange-dim: rgba(255,159,10,.1);
+            --blue: #0a84ff;
+            --display: 'Bebas Neue', sans-serif;
+            --sans: 'Inter', -apple-system, sans-serif;
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--black);
+            color: var(--text);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .phone {
+            width: 100%;
+            max-width: 520px;
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Screens */
+        .screens {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .screen {
+            display: none;
+            min-height: calc(100vh - 70px);
+            min-height: calc(100dvh - 70px);
+        }
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Transicion slide */
+        .screen.slide-in-right {
+            animation: slideInRight .35s cubic-bezier(.22,1,.36,1) forwards;
+        }
+        .screen.slide-in-left {
+            animation: slideInLeft .35s cubic-bezier(.22,1,.36,1) forwards;
+        }
+        .screen.fade-in {
+            animation: fadeIn .3s ease forwards;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { transform: scale(.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes countPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        /* Bottom nav */
+        .bnav {
+            display: none;
+            height: 70px;
+            background: var(--black);
+            border-top: 1px solid var(--border);
+            align-items: center;
+            justify-content: space-around;
+            flex-shrink: 0;
+        }
+        .bnav.show { display: flex; }
+        .bnav-item {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 4px;
+            background: none; border: none;
+            color: var(--text-3); cursor: pointer;
+            padding: 8px 14px; font-family: var(--sans);
+            transition: color .2s, transform .15s;
+        }
+        .bnav-item:active { transform: scale(.9); }
+        .bnav-item.active { color: var(--white); }
+        .bnav-item svg { width: 24px; height: 24px; }
+        .bnav-item span { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* INPUTS */
+        .field { margin-bottom: 16px; }
+        .field-label {
+            display: block; font-size: 11px; font-weight: 700;
+            color: var(--text-2); text-transform: uppercase;
+            letter-spacing: 1.5px; margin-bottom: 8px;
+        }
+        .input {
+            width: 100%; background: var(--surface);
+            border: 2px solid var(--border);
+            color: var(--white); padding: 16px 18px;
+            border-radius: 0; font-family: var(--sans);
+            font-size: 16px; font-weight: 500;
+            outline: none; transition: border-color .2s;
+        }
+        .input:focus { border-color: var(--volt); }
+        .input::placeholder { color: var(--text-3); }
+
+        .btn {
+            width: 100%; padding: 18px; border: none;
+            font-family: var(--sans); font-size: 16px;
+            font-weight: 800; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            transition: all .15s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), rgba(255,255,255,.3) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity .4s;
+        }
+        .btn.ripple::after { opacity: 1; }
+        .btn-volt {
+            background: var(--volt); color: var(--black);
+        }
+        .btn-volt:hover { filter: brightness(1.1); }
+        .btn-volt:active { transform: scale(.98); }
+        .btn-volt:disabled { opacity: .3; cursor: wait; }
+        .btn-dark {
+            background: var(--surface-2); color: var(--text-2);
+        }
+        .btn-dark:hover { color: var(--white); }
+        .btn-ghost {
+            background: none; color: var(--text-2);
+            padding: 14px; font-size: 13px;
+        }
+        .btn-ghost:hover { color: var(--white); }
+        .btn-outline {
+            background: none;
+            border: 2px solid var(--text-3);
+            color: var(--white);
+        }
+        .btn-outline:hover { border-color: var(--white); }
+        .btn-red {
+            background: var(--red-dim); color: var(--red);
+            border: 1px solid rgba(255,59,48,.2);
+        }
+
+        .link { color: var(--volt); text-decoration: none; font-weight: 700; cursor: pointer; }
+        .link:hover { text-decoration: underline; }
+
+        .alert {
+            padding: 14px 18px; margin-bottom: 16px;
+            font-size: 13px; font-weight: 600;
+            display: none;
+        }
+        .alert.show { display: block; animation: slideUp .3s ease; }
+        .alert-error { background: var(--red-dim); color: var(--red); }
+        .alert-success { background: var(--green-dim); color: var(--green); }
+
+        .spinner {
+            width: 18px; height: 18px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin .5s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 90%;
+            max-width: 480px;
+            pointer-events: none;
+        }
+        .toast {
+            padding: 14px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: var(--sans);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastIn .4s cubic-bezier(.22,1,.36,1) forwards;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        .toast.removing {
+            animation: toastOut .3s ease forwards;
+        }
+        .toast-success { background: var(--green-dim); color: var(--green); border-left: 3px solid var(--green); }
+        .toast-error { background: var(--red-dim); color: var(--red); border-left: 3px solid var(--red); }
+        .toast-info { background: rgba(10,132,255,.1); color: var(--blue); border-left: 3px solid var(--blue); }
+        .toast-icon { font-size: 16px; flex-shrink: 0; }
+        @keyframes toastIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes toastOut {
+            to { transform: translateY(-30px); opacity: 0; }
+        }
+
+        /* Skeleton loading */
+        .skeleton {
+            background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
+        .skeleton-line { height: 16px; margin-bottom: 10px; }
+        .skeleton-line.w60 { width: 60%; }
+        .skeleton-line.w80 { width: 80%; }
+        .skeleton-line.w40 { width: 40%; }
+        .skeleton-circle { width: 48px; height: 48px; border-radius: 50%; }
+        .skeleton-block { height: 60px; width: 100%; }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Pull to refresh */
+        .ptr-indicator {
+            text-align: center;
+            padding: 0;
+            height: 0;
+            overflow: hidden;
+            transition: height .2s, padding .2s;
+            color: var(--volt);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .ptr-indicator.pulling {
+            height: 50px;
+            padding: 12px 0;
+        }
+        .ptr-indicator.refreshing {
+            height: 50px;
+            padding: 12px 0;
+        }
+        .ptr-arrow {
+            transition: transform .2s;
+            width: 18px; height: 18px;
+        }
+        .ptr-indicator.pulling .ptr-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* AUTH SCREENS */
+        .auth-screen {
+            padding: 0 28px;
+            justify-content: center;
+        }
+        .auth-brand {
+            margin-bottom: 48px;
+        }
+        .auth-brand h1 {
+            font-family: var(--display);
+            font-size: 64px;
+            line-height: .9;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .auth-brand h1 em {
+            color: var(--volt);
+            font-style: normal;
+        }
+        .auth-brand p {
+            font-size: 14px;
+            color: var(--text-3);
+            margin-top: 12px;
+            font-weight: 500;
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--text-3);
+        }
+        .auth-extra {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        /* Verify code */
+        .code-row {
+            display: flex; gap: 8px;
+            justify-content: center;
+            margin: 28px 0;
+        }
+        .code-box {
+            width: 52px; height: 64px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            text-align: center;
+            font-size: 28px; font-weight: 800;
+            font-family: var(--display);
+            color: var(--white);
+            outline: none;
+            transition: border-color .2s, transform .15s;
+        }
+        .code-box:focus { border-color: var(--volt); transform: scale(1.05); }
+        .debug-code {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .debug-code small { color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        .debug-code .code {
+            font-family: var(--display);
+            font-size: 40px;
+            color: var(--volt);
+            letter-spacing: 8px;
+            margin-top: 4px;
+        }
+
+        /* HOME */
+        .home-screen { padding: 0; }
+        .home-head {
+            padding: 24px 28px 0;
+        }
+        .home-greeting {
+            font-size: 14px;
+            color: var(--text-3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .home-name {
+            font-family: var(--display);
+            font-size: 42px;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        /* Big stat hero */
+        .hero-stat {
+            text-align: center;
+            padding: 40px 28px 32px;
+        }
+        .hero-label {
+            font-size: 11px; font-weight: 700;
+            color: var(--text-3); text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 4px;
+        }
+        .hero-value {
+            font-family: var(--display);
+            font-size: 96px;
+            line-height: .85;
+            letter-spacing: -2px;
+        }
+        .hero-unit {
+            font-family: var(--display);
+            font-size: 32px;
+            color: var(--text-3);
+            letter-spacing: 1px;
+        }
+
+        /* Mini stats row */
+        .mini-stats {
+            display: flex;
+            padding: 0 28px;
+            margin-bottom: 32px;
+        }
+        .mini-stat {
+            flex: 1;
+            text-align: center;
+            padding: 16px 0;
+            border-top: 1px solid var(--border);
+        }
+        .mini-stat:not(:last-child) { border-right: 1px solid var(--border); }
+        .mini-stat .v {
+            font-family: var(--display);
+            font-size: 28px;
+            letter-spacing: .5px;
+        }
+        .mini-stat .l {
+            font-size: 9px; font-weight: 700;
+            color: var(--text-3); text-transform: uppercase;
+            letter-spacing: 1.5px; margin-top: 2px;
+        }
+
+        /* Start button — big circle Nike style con gradiente rotativo */
+        .start-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 0 28px 28px;
+        }
+        .start-btn {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            background: var(--volt);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--display);
+            font-size: 28px;
+            color: var(--black);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            transition: all .2s;
+            position: relative;
+            z-index: 1;
+        }
+        .start-btn:hover {
+            transform: scale(1.05);
+        }
+        .start-btn:active { transform: scale(.97); }
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            background: conic-gradient(var(--volt), var(--green), var(--volt), transparent, var(--volt));
+            z-index: -1;
+            animation: rotateGradient 3s linear infinite;
+            opacity: .6;
+        }
+        .start-btn::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: var(--black);
+            z-index: -1;
+        }
+        @keyframes rotateGradient {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Recent runs */
+        .section-head-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 28px;
+            margin-bottom: 12px;
+        }
+        .section-head {
+            font-size: 11px; font-weight: 700;
+            color: var(--text-3); text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 0 28px;
+            margin-bottom: 12px;
+        }
+        .section-head-row .sh-title {
+            font-size: 11px; font-weight: 700;
+            color: var(--text-3); text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .section-head-row .sh-link {
+            font-size: 11px; font-weight: 700;
+            color: var(--volt); text-transform: uppercase;
+            letter-spacing: 1px; cursor: pointer;
+            background: none; border: none;
+            font-family: var(--sans);
+        }
+        .run-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 28px;
+            border-top: 1px solid var(--border);
+            gap: 16px;
+            animation: slideUp .3s ease backwards;
+            position: relative;
+            overflow: hidden;
+            transition: transform .2s, background .2s;
+        }
+        .run-item:last-child { border-bottom: 1px solid var(--border); }
+        .run-item.swiped { transform: translateX(-80px); }
+        .run-dot {
+            width: 8px; height: 8px;
+            background: var(--volt);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .run-data { flex: 1; }
+        .run-km {
+            font-family: var(--display);
+            font-size: 24px;
+            letter-spacing: .5px;
+        }
+        .run-detail {
+            font-size: 12px;
+            color: var(--text-3);
+            font-weight: 500;
+            margin-top: 1px;
+        }
+        .run-right {
+            text-align: right;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .run-info {
+            text-align: right;
+        }
+        .run-cal {
+            font-family: var(--display);
+            font-size: 20px;
+            color: var(--orange);
+        }
+        .run-date { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+        .run-delete {
+            background: var(--red);
+            border: none;
+            color: var(--white);
+            width: 36px; height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all .15s;
+        }
+        .run-delete:hover { background: #ff5545; }
+        .run-delete svg { width: 16px; height: 16px; }
+
+        .empty {
+            text-align: center;
+            padding: 40px 28px;
+            color: var(--text-3);
+            font-size: 14px;
+        }
+
+        /* Modal historial completo */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.85);
+            z-index: 100;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        .modal-overlay.show {
+            display: flex;
+            animation: fadeIn .2s ease;
+        }
+        .modal-content {
+            background: var(--bg);
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            max-height: 90dvh;
+            overflow-y: auto;
+            padding: 0 0 40px;
+            animation: slideUp .35s cubic-bezier(.22,1,.36,1);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 28px;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 2;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-family: var(--display);
+            font-size: 32px;
+            letter-spacing: 1px;
+        }
+        .modal-close {
+            background: none; border: none;
+            color: var(--text-2); cursor: pointer;
+            padding: 8px;
+        }
+        .modal-close svg { width: 24px; height: 24px; }
+
+        /* RUNNING */
+        .running-screen {
+            padding: 0 28px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: var(--black);
+        }
+        .run-active-label {
+            font-size: 11px; font-weight: 700;
+            color: var(--volt); text-transform: uppercase;
+            letter-spacing: 3px;
+            display: flex; align-items: center;
+            justify-content: center; gap: 8px;
+            margin-bottom: 20px;
+        }
+        .pulse-dot {
+            width: 8px; height: 8px;
+            background: var(--volt);
+            border-radius: 50%;
+            animation: pulse-glow 1.2s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+            0%,100% { opacity: 1; box-shadow: 0 0 8px var(--volt); }
+            50% { opacity: .3; box-shadow: none; }
+        }
+        .run-timer {
+            font-family: var(--display);
+            font-size: 80px;
+            letter-spacing: 2px;
+            line-height: .9;
+            margin-bottom: 40px;
+        }
+        .run-live-stats {
+            display: flex;
+            width: 100%;
+            margin-bottom: 48px;
+        }
+        .run-live-stat {
+            flex: 1;
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+        }
+        .run-live-stat:not(:last-child) { border-right: 1px solid var(--border); }
+        .run-live-stat .v {
+            font-family: var(--display);
+            font-size: 44px;
+            letter-spacing: .5px;
+        }
+        .run-live-stat .l {
+            font-size: 10px; font-weight: 700;
+            color: var(--text-3); text-transform: uppercase;
+            letter-spacing: 1.5px; margin-top: 2px;
+        }
+        .run-live-stat:nth-child(1) .v { color: var(--volt); }
+        .run-live-stat:nth-child(2) .v { color: var(--orange); }
+        .run-live-stat:nth-child(3) .v { color: var(--blue); }
+
+        .run-actions {
+            display: flex; gap: 12px; width: 100%;
+        }
+        .run-actions .btn { flex: 1; }
+
+        /* POST-RUN SUMMARY */
+        .summary-screen {
+            padding: 0 28px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: var(--black);
+        }
+        .summary-badge {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: var(--volt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            animation: scaleIn .5s cubic-bezier(.22,1,.36,1) forwards;
+        }
+        .summary-badge svg { width: 40px; height: 40px; color: var(--black); }
+        .summary-title {
+            font-family: var(--display);
+            font-size: 48px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            animation: slideUp .4s .1s cubic-bezier(.22,1,.36,1) both;
+        }
+        .summary-subtitle {
+            color: var(--text-3);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            animation: slideUp .4s .2s cubic-bezier(.22,1,.36,1) both;
+        }
+        .summary-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            width: 100%;
+            margin-bottom: 40px;
+            animation: slideUp .4s .3s cubic-bezier(.22,1,.36,1) both;
+        }
+        .summary-stat {
+            background: var(--surface);
+            padding: 24px 16px;
+            text-align: center;
+        }
+        .summary-stat .v {
+            font-family: var(--display);
+            font-size: 42px;
+            letter-spacing: .5px;
+        }
+        .summary-stat .l {
+            font-size: 10px; font-weight: 700;
+            color: var(--text-3); text-transform: uppercase;
+            letter-spacing: 1.5px; margin-top: 4px;
+        }
+        .summary-stat:nth-child(1) .v { color: var(--volt); }
+        .summary-stat:nth-child(2) .v { color: var(--orange); }
+        .summary-stat:nth-child(3) .v { color: var(--blue); }
+        .summary-stat:nth-child(4) .v { color: var(--green); }
+
+        /* STATS */
+        .stats-screen { padding: 0 28px; padding-top: 24px; }
+        .stats-title {
+            font-family: var(--display);
+            font-size: 48px;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+        .compare-block {
+            border-top: 1px solid var(--border);
+            padding: 20px 0;
+        }
+        .compare-label {
+            font-size: 10px; font-weight: 700;
+            color: var(--text-3); text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 16px;
+        }
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .cg-val {
+            font-family: var(--display);
+            font-size: 32px;
+            letter-spacing: .5px;
+        }
+        .cg-sub {
+            font-size: 10px; font-weight: 700;
+            color: var(--text-3); text-transform: uppercase;
+            letter-spacing: 1px; margin-top: 2px;
+        }
+        .cg-diff {
+            margin-top: 16px;
+            grid-column: span 2;
+            padding: 14px 18px;
+            background: var(--surface);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cg-diff .label { font-size: 13px; color: var(--text-2); font-weight: 600; }
+        .cg-diff .val {
+            font-family: var(--display);
+            font-size: 22px;
+        }
+        .cg-diff .val.up { color: var(--green); }
+        .cg-diff .val.down { color: var(--red); }
+
+        /* FRIENDS */
+        .friends-screen { padding: 0; padding-top: 24px; }
+        .friends-title {
+            font-family: var(--display);
+            font-size: 48px;
+            letter-spacing: 1px;
+            padding: 0 28px;
+            margin-bottom: 24px;
+        }
+
+        .lb-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 28px;
+            border-top: 1px solid var(--border);
+        }
+        .lb-item:last-of-type { border-bottom: 1px solid var(--border); }
+        .lb-item.is-me { background: var(--volt-dim); }
+        .lb-pos {
+            font-family: var(--display);
+            font-size: 28px;
+            width: 36px;
+            text-align: center;
+            color: var(--text-3);
+        }
+        .lb-item:nth-child(1) .lb-pos { color: var(--orange); }
+        .lb-item:nth-child(2) .lb-pos { color: var(--text-2); }
+        .lb-item:nth-child(3) .lb-pos { color: #cd7f32; }
+        .lb-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--surface-3);
+            display: flex; align-items: center;
+            justify-content: center;
+            font-weight: 800; font-size: 16px;
+            color: var(--text-2);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .lb-avatar img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .lb-name { font-size: 15px; font-weight: 700; }
+        .lb-country { font-size: 12px; color: var(--text-3); }
+        .lb-km {
+            margin-left: auto;
+            font-family: var(--display);
+            font-size: 22px;
+            color: var(--volt);
+        }
+
+        .friend-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 28px;
+            border-top: 1px solid var(--border);
+        }
+        .friend-item:last-of-type { border-bottom: 1px solid var(--border); }
+        .add-btn {
+            margin-left: auto;
+            background: var(--volt);
+            color: var(--black);
+            border: none;
+            padding: 8px 16px;
+            font-family: var(--sans);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .add-btn:hover { filter: brightness(1.1); }
+        .add-btn:disabled { opacity: .3; }
+
+        /* Pending requests */
+        .pending-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+        .pending-actions button {
+            border: none;
+            padding: 8px 14px;
+            font-family: var(--sans);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .accept-btn {
+            background: var(--green);
+            color: var(--black);
+        }
+        .reject-btn {
+            background: var(--surface-2);
+            color: var(--text-2);
+        }
+
+        /* PROFILE */
+        .profile-screen { padding: 0 28px; padding-top: 24px; }
+        .prof-head {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .prof-avatar {
+            width: 88px; height: 88px;
+            border-radius: 50%;
+            background: var(--surface-3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--text-2);
+            margin-bottom: 12px;
+            border: 3px solid var(--volt);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform .2s;
+        }
+        .prof-avatar:hover { transform: scale(1.05); }
+        .prof-avatar img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .prof-avatar-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity .2s;
+        }
+        .prof-avatar:hover .prof-avatar-overlay { opacity: 1; }
+        .prof-avatar-overlay svg { width: 28px; height: 28px; color: var(--white); }
+        .prof-name {
+            font-family: var(--display);
+            font-size: 36px;
+            letter-spacing: 1px;
+        }
+        .prof-country { font-size: 14px; color: var(--text-3); font-weight: 600; }
+
+        .prof-stats {
+            display: flex;
+            margin-bottom: 32px;
+        }
+        .prof-stat {
+            flex: 1;
+            text-align: center;
+            padding: 18px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .prof-stat:not(:last-child) { border-right: 1px solid var(--border); }
+        .prof-stat .v {
+            font-family: var(--display);
+            font-size: 30px;
+        }
+        .prof-stat .l {
+            font-size: 9px; font-weight: 700;
+            color: var(--text-3); text-transform: uppercase;
+            letter-spacing: 1.5px; margin-top: 2px;
+        }
+        .prof-stat:nth-child(1) .v { color: var(--volt); }
+        .prof-stat:nth-child(2) .v { color: var(--orange); }
+        .prof-stat:nth-child(3) .v { color: var(--blue); }
+
+        .logout-btn {
+            width: 100%; padding: 16px;
+            background: none;
+            border: 1px solid var(--text-3);
+            color: var(--red);
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all .2s;
+        }
+        .logout-btn:hover { border-color: var(--red); background: var(--red-dim); }
+
+        /* Responsive mejorado */
+        @media (max-width: 440px) {
+            .hero-value { font-size: 72px; }
+            .start-btn { width: 120px; height: 120px; font-size: 24px; }
+            .auth-brand h1 { font-size: 52px; }
+            .run-timer { font-size: 64px; }
+            .run-live-stat .v { font-size: 36px; }
+            .summary-stat .v { font-size: 34px; }
+            .summary-title { font-size: 40px; }
+            .code-box { width: 46px; height: 56px; font-size: 24px; }
+        }
+        @media (max-width: 360px) {
+            .hero-value { font-size: 60px; }
+            .start-btn { width: 100px; height: 100px; font-size: 20px; }
+            .auth-brand h1 { font-size: 44px; }
+            .mini-stat .v { font-size: 22px; }
+            .run-timer { font-size: 52px; }
+            .run-live-stat .v { font-size: 28px; }
+            .friends-title, .stats-title { font-size: 36px; }
+            .code-box { width: 40px; height: 48px; font-size: 20px; }
+        }
+        @media (min-width: 768px) {
+            .phone {
+                border-left: 1px solid var(--border);
+                border-right: 1px solid var(--border);
+            }
+        }
+
+        /* Accesibilidad - focus visible */
+        *:focus-visible {
+            outline: 2px solid var(--volt);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="toast-container" id="toast-container"></div>
+
+<div class="phone">
+    <div class="screens" id="screens-container">
+
+        <!-- LOGIN -->
+        <div class="screen auth-screen active" id="s-login">
+            <div class="auth-brand">
+                <h1>RUNNER<br><em>APP</em></h1>
+                <p>Inicia sesion para continuar</p>
+            </div>
+            <div id="login-alert" class="alert"></div>
+            <div class="field">
+                <label class="field-label">Email</label>
+                <input type="email" class="input" id="login-email" placeholder="tu@correo.com" autocomplete="email" />
+            </div>
+            <div class="field">
+                <label class="field-label">Contrasena</label>
+                <input type="password" class="input" id="login-pass" placeholder="Min. 6 caracteres" autocomplete="current-password" />
+            </div>
+            <button type="button" class="btn btn-volt" id="login-btn" onclick="doLogin()" style="margin-top:8px">INICIAR SESION</button>
+            <div class="auth-extra">
+                <span class="link" onclick="showScreen('s-forgot','slide-in-right')">Olvidaste tu contrasena?</span>
+            </div>
+            <div class="auth-footer">
+                No tienes cuenta? <span class="link" onclick="showScreen('s-register','slide-in-right')">Registrate</span>
+            </div>
+        </div>
+
+        <!-- REGISTER -->
+        <div class="screen auth-screen" id="s-register">
+            <div class="auth-brand">
+                <h1>CREAR<br><em>CUENTA</em></h1>
+                <p>Unete a la comunidad runner</p>
+            </div>
+            <div id="reg-alert" class="alert"></div>
+            <div class="field">
+                <label class="field-label">Nombre</label>
+                <input type="text" class="input" id="reg-name" placeholder="Juan Perez" autocomplete="name" />
+            </div>
+            <div class="field">
+                <label class="field-label">Email</label>
+                <input type="email" class="input" id="reg-email" placeholder="tu@correo.com" autocomplete="email" />
+            </div>
+            <div class="field">
+                <label class="field-label">Pais</label>
+                <input type="text" class="input" id="reg-country" value="Honduras" />
+            </div>
+            <div class="field">
+                <label class="field-label">Contrasena</label>
+                <input type="password" class="input" id="reg-pass" placeholder="Min. 6 caracteres" autocomplete="new-password" />
+            </div>
+            <div class="field">
+                <label class="field-label">Confirmar</label>
+                <input type="password" class="input" id="reg-pass2" placeholder="Repetir contrasena" autocomplete="new-password" />
+            </div>
+            <button type="button" class="btn btn-volt" id="reg-btn" onclick="doRegister()">CREAR CUENTA</button>
+            <div class="auth-footer">
+                Ya tienes cuenta? <span class="link" onclick="showScreen('s-login','slide-in-left')">Inicia sesion</span>
+            </div>
+        </div>
+
+        <!-- VERIFY -->
+        <div class="screen auth-screen" id="s-verify">
+            <div class="auth-brand">
+                <h1>VERIFICAR<br><em>EMAIL</em></h1>
+                <p>Ingresa el codigo de 6 digitos enviado a tu correo</p>
+            </div>
+            <div id="verify-alert" class="alert"></div>
+            <div class="debug-code" id="debug-wrap" style="display:none">
+                <small>Codigo de prueba local</small>
+                <div class="code" id="debug-code"></div>
+            </div>
+            <div class="code-row" id="code-row">
+                <input class="code-box" type="text" maxlength="1" data-i="0" inputmode="numeric" />
+                <input class="code-box" type="text" maxlength="1" data-i="1" inputmode="numeric" />
+                <input class="code-box" type="text" maxlength="1" data-i="2" inputmode="numeric" />
+                <input class="code-box" type="text" maxlength="1" data-i="3" inputmode="numeric" />
+                <input class="code-box" type="text" maxlength="1" data-i="4" inputmode="numeric" />
+                <input class="code-box" type="text" maxlength="1" data-i="5" inputmode="numeric" />
+            </div>
+            <button type="button" class="btn btn-volt" onclick="doVerify()">VERIFICAR</button>
+            <button type="button" class="btn btn-ghost" onclick="doResend()">Reenviar codigo</button>
+        </div>
+
+        <!-- FORGOT PASSWORD -->
+        <div class="screen auth-screen" id="s-forgot">
+            <div class="auth-brand">
+                <h1>RECUPERAR<br><em>CUENTA</em></h1>
+                <p>Ingresa tu email para recibir un codigo de recuperacion</p>
+            </div>
+            <div id="forgot-alert" class="alert"></div>
+            <div class="field">
+                <label class="field-label">Email</label>
+                <input type="email" class="input" id="forgot-email" placeholder="tu@correo.com" autocomplete="email" />
+            </div>
+            <button type="button" class="btn btn-volt" id="forgot-btn" onclick="doForgotPassword()">ENVIAR CODIGO</button>
+            <div class="auth-footer">
+                <span class="link" onclick="showScreen('s-login','slide-in-left')">Volver al login</span>
+            </div>
+        </div>
+
+        <!-- RESET PASSWORD -->
+        <div class="screen auth-screen" id="s-reset">
+            <div class="auth-brand">
+                <h1>NUEVA<br><em>CONTRASENA</em></h1>
+                <p>Ingresa el codigo y tu nueva contrasena</p>
+            </div>
+            <div id="reset-alert" class="alert"></div>
+            <div class="field">
+                <label class="field-label">Codigo de recuperacion</label>
+                <input type="text" class="input" id="reset-token" placeholder="Codigo recibido" />
+            </div>
+            <div class="field">
+                <label class="field-label">Nueva contrasena</label>
+                <input type="password" class="input" id="reset-pass" placeholder="Min. 6 caracteres" autocomplete="new-password" />
+            </div>
+            <div class="field">
+                <label class="field-label">Confirmar contrasena</label>
+                <input type="password" class="input" id="reset-pass2" placeholder="Repetir contrasena" autocomplete="new-password" />
+            </div>
+            <button type="button" class="btn btn-volt" id="reset-btn" onclick="doResetPassword()">CAMBIAR CONTRASENA</button>
+            <div class="auth-footer">
+                <span class="link" onclick="showScreen('s-login','slide-in-left')">Volver al login</span>
+            </div>
+        </div>
+
+        <!-- HOME -->
+        <div class="screen home-screen" id="s-home">
+            <div class="ptr-indicator" id="ptr-indicator">
+                <svg class="ptr-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                <span id="ptr-text">Desliza para actualizar</span>
+            </div>
+            <div class="home-head">
+                <div class="home-greeting">Bienvenido</div>
+                <div class="home-name" id="home-name">RUNNER</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-label">Este mes</div>
+                <div class="hero-value" id="h-km">0.0</div>
+                <div class="hero-unit">KM</div>
+            </div>
+            <div class="mini-stats">
+                <div class="mini-stat">
+                    <div class="v" id="h-runs">0</div>
+                    <div class="l">Carreras</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="v" id="h-cal">0</div>
+                    <div class="l">Kcal</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="v" id="h-pace">0:00</div>
+                    <div class="l">Min/Km</div>
+                </div>
+            </div>
+            <div class="start-wrap">
+                <button type="button" class="start-btn" onclick="startRun()">START</button>
+            </div>
+            <div class="section-head-row" style="margin-top:16px">
+                <span class="sh-title">Actividad reciente</span>
+                <button type="button" class="sh-link" id="view-all-btn" onclick="openAllRuns()" style="display:none">Ver todo</button>
+            </div>
+            <div id="runs-list"></div>
+        </div>
+
+        <!-- RUNNING -->
+        <div class="screen running-screen" id="s-running">
+            <div class="run-active-label">
+                <span class="pulse-dot"></span> En carrera
+            </div>
+            <div class="run-timer" id="run-timer">00:00:00</div>
+            <div class="run-live-stats">
+                <div class="run-live-stat">
+                    <div class="v" id="run-km">0.00</div>
+                    <div class="l">KM</div>
+                </div>
+                <div class="run-live-stat">
+                    <div class="v" id="run-cal">0</div>
+                    <div class="l">KCAL</div>
+                </div>
+                <div class="run-live-stat">
+                    <div class="v" id="run-pace">0:00</div>
+                    <div class="l">MIN/KM</div>
+                </div>
+            </div>
+            <div class="run-actions">
+                <button type="button" class="btn btn-volt" id="run-stop" onclick="stopRun()">FINALIZAR</button>
+                <button type="button" class="btn btn-outline" onclick="cancelRun()">CANCELAR</button>
+            </div>
+        </div>
+
+        <!-- POST-RUN SUMMARY -->
+        <div class="screen summary-screen" id="s-summary">
+            <div class="summary-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="summary-title">CARRERA COMPLETA</div>
+            <div class="summary-subtitle">Excelente trabajo!</div>
+            <div class="summary-stats">
+                <div class="summary-stat">
+                    <div class="v" id="sum-km">0.00</div>
+                    <div class="l">Kilometros</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="v" id="sum-time">00:00</div>
+                    <div class="l">Tiempo</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="v" id="sum-cal">0</div>
+                    <div class="l">Calorias</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="v" id="sum-pace">0:00</div>
+                    <div class="l">Min/Km</div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-volt" onclick="closeSummary()">CONTINUAR</button>
+        </div>
+
+        <!-- STATS -->
+        <div class="screen stats-screen" id="s-stats">
+            <div class="stats-title">TUS STATS</div>
+            <div id="stats-content"></div>
+        </div>
+
+        <!-- FRIENDS -->
+        <div class="screen friends-screen" id="s-friends">
+            <div class="friends-title">SOCIAL</div>
+            <div id="pending-section" style="display:none">
+                <div class="section-head" style="padding-left:28px">Solicitudes pendientes</div>
+                <div id="pending-list"></div>
+            </div>
+            <div class="section-head" style="padding-left:28px">Clasificacion del Mes</div>
+            <div id="leaderboard"></div>
+            <div class="section-head" style="padding:20px 28px 12px">Mis Amigos</div>
+            <div id="friends-list"></div>
+            <div class="section-head" style="padding:20px 28px 12px">Descubrir</div>
+            <div id="discover-list"></div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="screen profile-screen" id="s-profile">
+            <div class="prof-head">
+                <div class="prof-avatar" id="pf-avatar" onclick="document.getElementById('photo-input').click()">
+                    <span id="pf-avatar-letter">?</span>
+                    <div class="prof-avatar-overlay">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    </div>
+                </div>
+                <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="uploadPhoto(this)" />
+                <div class="prof-name" id="pf-name">-</div>
+                <div class="prof-country" id="pf-country">-</div>
+            </div>
+            <div class="prof-stats">
+                <div class="prof-stat"><div class="v" id="pf-km">0</div><div class="l">KM Total</div></div>
+                <div class="prof-stat"><div class="v" id="pf-cal">0</div><div class="l">Calorias</div></div>
+                <div class="prof-stat"><div class="v" id="pf-runs">0</div><div class="l">Carreras</div></div>
+            </div>
+            <div class="field">
+                <label class="field-label">Nombre</label>
+                <input type="text" class="input" id="pf-name-in" />
+            </div>
+            <div class="field">
+                <label class="field-label">Pais</label>
+                <input type="text" class="input" id="pf-country-in" />
+            </div>
+            <button type="button" class="btn btn-outline" onclick="updateProfile()">GUARDAR CAMBIOS</button>
+            <button type="button" class="logout-btn" onclick="doLogout()">CERRAR SESION</button>
+        </div>
+
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bnav" id="bnav">
+        <button type="button" class="bnav-item active" data-s="s-home" onclick="nav('s-home')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <span>Inicio</span>
+        </button>
+        <button type="button" class="bnav-item" data-s="s-stats" onclick="nav('s-stats')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span>Stats</span>
+        </button>
+        <button type="button" class="bnav-item" data-s="s-friends" onclick="nav('s-friends')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Social</span>
+        </button>
+        <button type="button" class="bnav-item" data-s="s-profile" onclick="nav('s-profile')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg>
+            <span>Perfil</span>
+        </button>
+    </nav>
+</div>
+
+<!-- Modal: Historial completo -->
+<div class="modal-overlay" id="modal-all-runs">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>HISTORIAL</h2>
+            <button type="button" class="modal-close" onclick="closeAllRuns()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div id="all-runs-list"></div>
+    </div>
+</div>
+
+<script>
+const API = location.origin + '/runner_backend/public/api';
+let TOKEN = localStorage.getItem('runner_token') || '';
+let USER = JSON.parse(localStorage.getItem('runner_user') || 'null');
+let verifyEmail = '';
+let forgotEmail = '';
+let runInterval = null, runSeconds = 0, runDistance = 0;
+let allRunsData = [];
+let lastScreenId = 's-login';
+
+if (TOKEN && USER) showApp();
+
+// Utilidad API
+async function api(path, method='GET', body=null) {
+    const h = { 'Accept':'application/json', 'Content-Type':'application/json' };
+    if (TOKEN) h['Authorization'] = 'Bearer ' + TOKEN;
+    const o = { method, headers: h };
+    if (body && method !== 'GET') o.body = JSON.stringify(body);
+    const r = await fetch(API + path, o);
+    return { status: r.status, ...await r.json() };
+}
+
+// Utilidad API para multipart (foto)
+async function apiMultipart(path, formData) {
+    const h = {};
+    if (TOKEN) h['Authorization'] = 'Bearer ' + TOKEN;
+    const r = await fetch(API + path, { method: 'POST', headers: h, body: formData });
+    return { status: r.status, ...await r.json() };
+}
+
+// --- Toast notifications ---
+function toast(msg, type='success') {
+    const container = document.getElementById('toast-container');
+    const icons = { success: '&#10003;', error: '&#10007;', info: '&#8505;' };
+    const el = document.createElement('div');
+    el.className = 'toast toast-' + type;
+    el.innerHTML = `<span class="toast-icon">${icons[type] || ''}</span><span>${msg}</span>`;
+    el.onclick = () => removeToast(el);
+    container.appendChild(el);
+    setTimeout(() => removeToast(el), 3500);
+}
+function removeToast(el) {
+    if (!el.parentNode) return;
+    el.classList.add('removing');
+    setTimeout(() => el.remove(), 300);
+}
+
+// --- Ripple / haptic visual en botones ---
+document.addEventListener('click', e => {
+    const btn = e.target.closest('.btn, .add-btn, .start-btn');
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    btn.style.setProperty('--ripple-x', ((e.clientX - rect.left) / rect.width * 100) + '%');
+    btn.style.setProperty('--ripple-y', ((e.clientY - rect.top) / rect.height * 100) + '%');
+    btn.classList.add('ripple');
+    setTimeout(() => btn.classList.remove('ripple'), 400);
+});
+
+// --- CountUp animado ---
+function animateCount(el, target, decimals=0, duration=600, suffix='') {
+    const start = parseFloat(el.textContent) || 0;
+    const diff = target - start;
+    if (Math.abs(diff) < 0.01) { el.textContent = target.toFixed(decimals) + suffix; return; }
+    const startTime = performance.now();
+    function step(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = start + diff * eased;
+        el.textContent = current.toFixed(decimals) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+// --- Navegacion de pantallas con transicion ---
+function showScreen(id, anim='fade-in') {
+    const prev = document.querySelector('.screen.active');
+    if (prev) {
+        prev.classList.remove('active', 'slide-in-right', 'slide-in-left', 'fade-in');
+    }
+    const next = document.getElementById(id);
+    next.classList.remove('slide-in-right', 'slide-in-left', 'fade-in');
+    next.classList.add('active', anim);
+    lastScreenId = id;
+}
+function showApp() {
+    document.getElementById('bnav').classList.add('show');
+    nav('s-home');
+    loadHome();
+}
+function nav(s) {
+    showScreen(s, 'fade-in');
+    document.querySelectorAll('.bnav-item').forEach(b => b.classList.toggle('active', b.dataset.s === s));
+    if (s === 's-home') loadHome();
+    else if (s === 's-stats') loadStats();
+    else if (s === 's-friends') loadFriends();
+    else if (s === 's-profile') loadProfile();
+}
+function showAlert(id, msg, type='error') {
+    const el = document.getElementById(id);
+    el.textContent = typeof msg === 'string' ? msg : Object.values(msg).flat().join(', ');
+    el.className = 'alert show alert-' + type;
+}
+
+// --- Skeleton helpers ---
+function showSkeleton(containerId, count=3) {
+    const el = document.getElementById(containerId);
+    let h = '';
+    for (let i = 0; i < count; i++) {
+        h += `<div style="display:flex;align-items:center;gap:16px;padding:16px 28px;border-top:1px solid var(--border)">
+            <div class="skeleton skeleton-circle"></div>
+            <div style="flex:1"><div class="skeleton skeleton-line w80"></div><div class="skeleton skeleton-line w40"></div></div>
+        </div>`;
+    }
+    el.innerHTML = h;
+}
+
+// ─── Auth ───
+async function doLogin() {
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    const r = await api('/auth/login','POST',{
+        email: document.getElementById('login-email').value,
+        password: document.getElementById('login-pass').value
+    });
+    btn.disabled = false; btn.textContent = 'INICIAR SESION';
+    if (!r.success) return showAlert('login-alert', r.message);
+    TOKEN = r.data.token; USER = r.data.user;
+    localStorage.setItem('runner_token', TOKEN);
+    localStorage.setItem('runner_user', JSON.stringify(USER));
+    toast('Bienvenido, ' + (USER.name || ''));
+    showApp();
+}
+async function doRegister() {
+    const btn = document.getElementById('reg-btn');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    const r = await api('/auth/register','POST',{
+        name: document.getElementById('reg-name').value,
+        email: document.getElementById('reg-email').value,
+        password: document.getElementById('reg-pass').value,
+        password_confirmation: document.getElementById('reg-pass2').value,
+        country: document.getElementById('reg-country').value
+    });
+    btn.disabled = false; btn.textContent = 'CREAR CUENTA';
+    if (!r.success) return showAlert('reg-alert', r.message);
+    verifyEmail = document.getElementById('reg-email').value;
+    showScreen('s-verify', 'slide-in-right');
+    if (r.data.debug_code) {
+        document.getElementById('debug-wrap').style.display = 'block';
+        document.getElementById('debug-code').textContent = r.data.debug_code;
+    }
+    toast('Cuenta creada! Verifica tu email', 'info');
+}
+async function doVerify() {
+    const code = Array.from(document.querySelectorAll('#code-row input')).map(i => i.value).join('');
+    if (code.length < 6) return showAlert('verify-alert','Ingresa los 6 digitos');
+    const r = await api('/auth/verify-email','POST',{ email: verifyEmail, code });
+    if (!r.success) return showAlert('verify-alert', r.message);
+    TOKEN = r.data.token; USER = r.data.user;
+    localStorage.setItem('runner_token', TOKEN);
+    localStorage.setItem('runner_user', JSON.stringify(USER));
+    toast('Email verificado!');
+    showApp();
+}
+async function doResend() {
+    const r = await api('/auth/resend-code','POST',{ email: verifyEmail });
+    if (r.data?.debug_code) {
+        document.getElementById('debug-wrap').style.display = 'block';
+        document.getElementById('debug-code').textContent = r.data.debug_code;
+    }
+    toast('Codigo reenviado', 'info');
+}
+async function doLogout() {
+    await api('/auth/logout','POST');
+    TOKEN = ''; USER = null;
+    localStorage.removeItem('runner_token');
+    localStorage.removeItem('runner_user');
+    document.getElementById('bnav').classList.remove('show');
+    showScreen('s-login', 'fade-in');
+    toast('Sesion cerrada', 'info');
+}
+
+// ─── Forgot & Reset Password ───
+async function doForgotPassword() {
+    const btn = document.getElementById('forgot-btn');
+    const email = document.getElementById('forgot-email').value;
+    if (!email) return showAlert('forgot-alert', 'Ingresa tu email');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    const r = await api('/auth/forgot-password','POST',{ email });
+    btn.disabled = false; btn.textContent = 'ENVIAR CODIGO';
+    if (!r.success) return showAlert('forgot-alert', r.message);
+    forgotEmail = email;
+    showAlert('forgot-alert', r.message || 'Codigo enviado a tu email', 'success');
+    if (r.data?.debug_token) {
+        document.getElementById('reset-token').value = r.data.debug_token;
+    }
+    setTimeout(() => showScreen('s-reset', 'slide-in-right'), 1500);
+}
+async function doResetPassword() {
+    const btn = document.getElementById('reset-btn');
+    const token = document.getElementById('reset-token').value;
+    const pass = document.getElementById('reset-pass').value;
+    const pass2 = document.getElementById('reset-pass2').value;
+    if (!token || !pass) return showAlert('reset-alert', 'Completa todos los campos');
+    if (pass !== pass2) return showAlert('reset-alert', 'Las contrasenas no coinciden');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    const r = await api('/auth/reset-password','POST',{
+        email: forgotEmail,
+        token, password: pass, password_confirmation: pass2
+    });
+    btn.disabled = false; btn.textContent = 'CAMBIAR CONTRASENA';
+    if (!r.success) return showAlert('reset-alert', r.message);
+    toast('Contrasena actualizada!');
+    showScreen('s-login', 'slide-in-left');
+}
+
+// ─── Home ───
+async function loadHome() {
+    if (!USER) return;
+    document.getElementById('home-name').textContent = USER.name.split(' ')[0].toUpperCase();
+    showSkeleton('runs-list', 3);
+    const [mo, ru] = await Promise.all([api('/stats/monthly'), api('/runs')]);
+    if (mo.success) {
+        animateCount(document.getElementById('h-km'), parseFloat(mo.data.total_km), 1);
+        animateCount(document.getElementById('h-runs'), parseInt(mo.data.total_runs));
+        animateCount(document.getElementById('h-cal'), parseInt(mo.data.total_calories));
+        const p = parseFloat(mo.data.avg_pace);
+        document.getElementById('h-pace').textContent = p > 0 ? Math.floor(p)+':'+String(Math.round((p%1)*60)).padStart(2,'0') : '-';
+    }
+    const list = document.getElementById('runs-list');
+    if (ru.success && ru.data.data.length) {
+        allRunsData = ru.data.data;
+        document.getElementById('view-all-btn').style.display = allRunsData.length > 3 ? 'block' : 'none';
+        list.innerHTML = ru.data.data.slice(0,5).map((r, i) => renderRunItem(r, i, false)).join('');
+    } else {
+        allRunsData = [];
+        document.getElementById('view-all-btn').style.display = 'none';
+        list.innerHTML = '<div class="empty">Aun no has corrido. Presiona START!</div>';
+    }
+}
+
+function renderRunItem(r, i, showDelete=false) {
+    const m = Math.floor(r.duration_sec/60), s = r.duration_sec%60;
+    const d = new Date(r.created_at).toLocaleDateString('es',{day:'numeric',month:'short'});
+    const delBtn = showDelete ? `<button type="button" class="run-delete" onclick="deleteRun(${r.id}, this)" title="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>` : '';
+    return `<div class="run-item" style="animation-delay:${i*0.05}s">
+        <div class="run-dot"></div>
+        <div class="run-data"><div class="run-km">${parseFloat(r.distance_km).toFixed(2)} KM</div><div class="run-detail">${m}min ${s}s</div></div>
+        <div class="run-right">
+            <div class="run-info"><div class="run-cal">${r.calories}</div><div class="run-date">${d}</div></div>
+            ${delBtn}
+        </div>
+    </div>`;
+}
+
+// ─── Historial completo ───
+async function openAllRuns() {
+    const modal = document.getElementById('modal-all-runs');
+    modal.classList.add('show');
+    const listEl = document.getElementById('all-runs-list');
+    showSkeleton('all-runs-list', 5);
+    const ru = await api('/runs');
+    if (ru.success && ru.data.data.length) {
+        allRunsData = ru.data.data;
+        listEl.innerHTML = ru.data.data.map((r, i) => renderRunItem(r, i, true)).join('');
+    } else {
+        listEl.innerHTML = '<div class="empty">Sin carreras registradas</div>';
+    }
+}
+function closeAllRuns() {
+    document.getElementById('modal-all-runs').classList.remove('show');
+}
+async function deleteRun(id, btn) {
+    if (!confirm('Eliminar esta carrera?')) return;
+    btn.disabled = true;
+    const r = await api('/runs/' + id, 'DELETE');
+    if (r.success) {
+        btn.closest('.run-item').style.transition = 'all .3s';
+        btn.closest('.run-item').style.transform = 'translateX(100%)';
+        btn.closest('.run-item').style.opacity = '0';
+        setTimeout(() => {
+            btn.closest('.run-item')?.remove();
+            toast('Carrera eliminada');
+        }, 300);
+        loadHome();
+    } else {
+        btn.disabled = false;
+        toast('Error al eliminar', 'error');
+    }
+}
+
+// ─── Running ───
+function startRun() {
+    runSeconds = 0; runDistance = 0;
+    showScreen('s-running', 'slide-in-right');
+    document.getElementById('bnav').classList.remove('show');
+    runInterval = setInterval(() => {
+        runSeconds++;
+        runDistance += (2.5 + Math.random()) / 1000;
+        const h = Math.floor(runSeconds/3600), m = Math.floor((runSeconds%3600)/60), s = runSeconds%60;
+        document.getElementById('run-timer').textContent = String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+        document.getElementById('run-km').textContent = runDistance.toFixed(2);
+        document.getElementById('run-cal').textContent = Math.round(runDistance*70);
+        const pace = runDistance > 0 ? (runSeconds/60)/runDistance : 0;
+        document.getElementById('run-pace').textContent = pace > 0 ? Math.floor(pace)+':'+String(Math.round((pace%1)*60)).padStart(2,'0') : '-';
+    }, 1000);
+}
+async function stopRun() {
+    clearInterval(runInterval);
+    const btn = document.getElementById('run-stop');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> GUARDANDO';
+    await api('/runs','POST',{
+        distance_km: +runDistance.toFixed(3), duration_sec: runSeconds,
+        start_lat:14.0818, start_lng:-87.2068,
+        end_lat:14.0818+Math.random()*.01, end_lng:-87.2068+Math.random()*.01
+    });
+    btn.disabled = false; btn.textContent = 'FINALIZAR';
+
+    // Mostrar resumen post-carrera
+    const cal = Math.round(runDistance * 70);
+    const pace = runDistance > 0 ? (runSeconds/60)/runDistance : 0;
+    const m = Math.floor(runSeconds/60), s = runSeconds%60;
+    document.getElementById('sum-km').textContent = runDistance.toFixed(2);
+    document.getElementById('sum-time').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    document.getElementById('sum-cal').textContent = cal;
+    document.getElementById('sum-pace').textContent = pace > 0 ? Math.floor(pace)+':'+String(Math.round((pace%1)*60)).padStart(2,'0') : '-';
+    showScreen('s-summary', 'fade-in');
+
+    // Animar los numeros del resumen
+    setTimeout(() => {
+        animateCount(document.getElementById('sum-km'), runDistance, 2, 800);
+        animateCount(document.getElementById('sum-cal'), cal, 0, 800);
+    }, 500);
+}
+function closeSummary() {
+    document.getElementById('bnav').classList.add('show');
+    toast('Carrera guardada!');
+    nav('s-home');
+}
+function cancelRun() {
+    clearInterval(runInterval);
+    document.getElementById('bnav').classList.add('show');
+    nav('s-home');
+}
+
+// ─── Stats ───
+async function loadStats() {
+    const content = document.getElementById('stats-content');
+    content.innerHTML = '<div style="padding:20px 0"><div class="skeleton skeleton-block" style="margin-bottom:12px"></div><div class="skeleton skeleton-block" style="margin-bottom:12px"></div><div class="skeleton skeleton-block"></div></div>';
+    const [mo, wk, mc] = await Promise.all([
+        api('/stats/monthly'), api('/stats/weekly-compare'), api('/stats/monthly-compare')
+    ]);
+    let h = '';
+    if (mo.success) {
+        const d = mo.data;
+        h += `<div class="compare-block">
+            <div class="compare-label">Resumen del Mes</div>
+            <div class="compare-grid">
+                <div class="cg-item"><div class="cg-val" style="color:var(--volt)">${parseFloat(d.total_km).toFixed(1)}</div><div class="cg-sub">Kilometros</div></div>
+                <div class="cg-item"><div class="cg-val" style="color:var(--orange)">${d.total_calories}</div><div class="cg-sub">Calorias</div></div>
+                <div class="cg-item"><div class="cg-val">${d.total_runs}</div><div class="cg-sub">Carreras</div></div>
+                <div class="cg-item"><div class="cg-val" style="color:var(--blue)">${parseFloat(d.avg_pace).toFixed(1)}</div><div class="cg-sub">Ritmo Prom</div></div>
+            </div></div>`;
+    }
+    if (wk.success) {
+        const w = wk.data;
+        h += `<div class="compare-block">
+            <div class="compare-label">Semanal</div>
+            <div class="compare-grid">
+                <div class="cg-item"><div class="cg-val">${w.current_week_km}</div><div class="cg-sub">Esta semana</div></div>
+                <div class="cg-item"><div class="cg-val" style="color:var(--text-3)">${w.previous_week_km}</div><div class="cg-sub">Anterior</div></div>
+                <div class="cg-diff"><span class="label">Diferencia</span><span class="val ${w.difference_km>=0?'up':'down'}">${w.difference_km>=0?'+':''}${w.difference_km} km</span></div>
+            </div></div>`;
+    }
+    if (mc.success) {
+        const m = mc.data;
+        h += `<div class="compare-block">
+            <div class="compare-label">Mensual</div>
+            <div class="compare-grid">
+                <div class="cg-item"><div class="cg-val">${m.current_month_km}</div><div class="cg-sub">Este mes</div></div>
+                <div class="cg-item"><div class="cg-val" style="color:var(--text-3)">${m.previous_month_km}</div><div class="cg-sub">Anterior</div></div>
+                <div class="cg-diff"><span class="label">Diferencia</span><span class="val ${m.difference_km>=0?'up':'down'}">${m.difference_km>=0?'+':''}${m.difference_km} km</span></div>
+            </div></div>`;
+    }
+    content.innerHTML = h || '<div class="empty">Sin datos</div>';
+}
+
+// ─── Friends ───
+async function loadFriends() {
+    showSkeleton('leaderboard', 3);
+    showSkeleton('friends-list', 2);
+    showSkeleton('discover-list', 2);
+
+    const [lb, fr, ds, pn] = await Promise.all([
+        api('/stats/leaderboard'), api('/friends'), api('/users/by-country'), api('/friends/pending')
+    ]);
+
+    // Solicitudes pendientes
+    const pendingSection = document.getElementById('pending-section');
+    const pendingList = document.getElementById('pending-list');
+    if (pn.success && pn.data.length) {
+        pendingSection.style.display = 'block';
+        pendingList.innerHTML = pn.data.map(req =>
+            `<div class="friend-item">
+                <div class="lb-avatar">${(req.user?.name||'?')[0]}</div>
+                <div><div class="lb-name">${req.user?.name||'Desconocido'}</div><div class="lb-country">Quiere ser tu amigo</div></div>
+                <div class="pending-actions">
+                    <button type="button" class="accept-btn" onclick="respondFriend(${req.id},'accepted',this)">Aceptar</button>
+                    <button type="button" class="reject-btn" onclick="respondFriend(${req.id},'rejected',this)">Rechazar</button>
+                </div>
+            </div>`).join('');
+    } else {
+        pendingSection.style.display = 'none';
+    }
+
+    const lbEl = document.getElementById('leaderboard');
+    if (lb.success && lb.data.length) {
+        lbEl.innerHTML = lb.data.map(u =>
+            `<div class="lb-item ${u.is_me?'is-me':''}">
+                <span class="lb-pos">${u.position}</span>
+                <div class="lb-avatar">${u.photo_url ? `<img src="${u.photo_url}" alt="${u.name}">` : (u.name||'?')[0]}</div>
+                <div><div class="lb-name">${u.name}${u.is_me?' (Tu)':''}</div><div class="lb-country">${u.country}</div></div>
+                <span class="lb-km">${u.km_this_month} km</span>
+            </div>`).join('');
+    } else { lbEl.innerHTML = '<div class="empty">Sin datos</div>'; }
+
+    const fEl = document.getElementById('friends-list');
+    if (fr.success && fr.data.length) {
+        fEl.innerHTML = fr.data.map(f =>
+            `<div class="friend-item">
+                <div class="lb-avatar">${(f.friend?.name||'?')[0]}</div>
+                <div><div class="lb-name">${f.friend?.name||'N/A'}</div><div class="lb-country">${f.friend?.total_km||0} km</div></div>
+            </div>`).join('');
+    } else { fEl.innerHTML = '<div class="empty">Sin amigos aun</div>'; }
+
+    const dEl = document.getElementById('discover-list');
+    if (ds.success && ds.data.length) {
+        dEl.innerHTML = ds.data.map(u =>
+            `<div class="friend-item">
+                <div class="lb-avatar">${(u.name||'?')[0]}</div>
+                <div><div class="lb-name">${u.name}</div><div class="lb-country">${u.total_km} km · ${u.country}</div></div>
+                <button type="button" class="add-btn" onclick="addFriend(${u.id},this)">AGREGAR</button>
+            </div>`).join('');
+    } else { dEl.innerHTML = '<div class="empty">No hay corredores</div>'; }
+}
+async function addFriend(id, btn) {
+    btn.disabled = true; btn.textContent = '...';
+    const r = await api('/friends/request','POST',{friend_id:id});
+    btn.textContent = 'ENVIADO';
+    if (r.success) toast('Solicitud enviada', 'info');
+    else toast('Error al enviar solicitud', 'error');
+}
+async function respondFriend(id, status, btn) {
+    const row = btn.closest('.friend-item');
+    row.style.opacity = '.5';
+    const r = await api('/friends/' + id + '/respond','POST',{ status });
+    if (r.success) {
+        row.style.transition = 'all .3s';
+        row.style.transform = 'translateX(100%)';
+        row.style.opacity = '0';
+        setTimeout(() => row.remove(), 300);
+        toast(status === 'accepted' ? 'Amigo aceptado!' : 'Solicitud rechazada', status === 'accepted' ? 'success' : 'info');
+        setTimeout(() => loadFriends(), 500);
+    } else {
+        row.style.opacity = '1';
+        toast('Error al responder', 'error');
+    }
+}
+
+// ─── Profile ───
+async function loadProfile() {
+    const r = await api('/user/profile');
+    if (!r.success) return;
+    const u = r.data; USER = u;
+    localStorage.setItem('runner_user', JSON.stringify(u));
+
+    const avatarEl = document.getElementById('pf-avatar');
+    const letterEl = document.getElementById('pf-avatar-letter');
+    // Foto de perfil
+    if (u.photo_url) {
+        letterEl.style.display = 'none';
+        let existingImg = avatarEl.querySelector('img');
+        if (!existingImg) {
+            existingImg = document.createElement('img');
+            avatarEl.insertBefore(existingImg, avatarEl.firstChild);
+        }
+        existingImg.src = u.photo_url;
+        existingImg.alt = u.name;
+    } else {
+        letterEl.style.display = '';
+        letterEl.textContent = (u.name||'?')[0];
+        const existingImg = avatarEl.querySelector('img');
+        if (existingImg) existingImg.remove();
+    }
+
+    document.getElementById('pf-name').textContent = u.name.toUpperCase();
+    document.getElementById('pf-country').textContent = u.country;
+    animateCount(document.getElementById('pf-km'), parseFloat(u.total_km), 1);
+    animateCount(document.getElementById('pf-cal'), parseInt(u.total_calories));
+    document.getElementById('pf-name-in').value = u.name;
+    document.getElementById('pf-country-in').value = u.country;
+    const runs = await api('/runs');
+    if (runs.success) {
+        animateCount(document.getElementById('pf-runs'), runs.data.total || runs.data.data?.length || 0);
+    }
+}
+async function updateProfile() {
+    const r = await api('/user/update','POST',{
+        name: document.getElementById('pf-name-in').value,
+        country: document.getElementById('pf-country-in').value
+    });
+    if (r.success) {
+        USER = r.data;
+        localStorage.setItem('runner_user', JSON.stringify(USER));
+        loadProfile();
+        toast('Perfil actualizado!');
+    } else {
+        toast('Error al actualizar', 'error');
+    }
+}
+
+// ─── Upload foto de perfil ───
+async function uploadPhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+        toast('La imagen no debe superar 5MB', 'error');
+        return;
+    }
+    const fd = new FormData();
+    fd.append('photo', file);
+    toast('Subiendo foto...', 'info');
+    const r = await apiMultipart('/user/upload-photo', fd);
+    if (r.success) {
+        toast('Foto actualizada!');
+        loadProfile();
+    } else {
+        toast(r.message || 'Error al subir foto', 'error');
+    }
+    input.value = '';
+}
+
+// ─── Pull to refresh ───
+(function initPTR() {
+    let startY = 0, pulling = false;
+    const container = document.getElementById('screens-container');
+    const indicator = document.getElementById('ptr-indicator');
+
+    container.addEventListener('touchstart', e => {
+        const homeScreen = document.getElementById('s-home');
+        if (!homeScreen.classList.contains('active')) return;
+        if (container.scrollTop > 5) return;
+        startY = e.touches[0].clientY;
+        pulling = true;
+    }, { passive: true });
+
+    container.addEventListener('touchmove', e => {
+        if (!pulling) return;
+        const diff = e.touches[0].clientY - startY;
+        if (diff > 10 && diff < 120) {
+            indicator.classList.add('pulling');
+            document.getElementById('ptr-text').textContent = diff > 60 ? 'Soltar para actualizar' : 'Desliza para actualizar';
+        }
+    }, { passive: true });
+
+    container.addEventListener('touchend', () => {
+        if (!pulling) return;
+        pulling = false;
+        if (indicator.classList.contains('pulling')) {
+            indicator.classList.remove('pulling');
+            indicator.classList.add('refreshing');
+            document.getElementById('ptr-text').textContent = 'Actualizando...';
+            loadHome().then(() => {
+                indicator.classList.remove('refreshing');
+                toast('Actualizado', 'info');
+            });
+        }
+    });
+})();
+
+// Code input nav
+document.querySelectorAll('#code-row input').forEach((inp, i, all) => {
+    inp.addEventListener('input', () => { if (inp.value && i < 5) all[i+1].focus(); });
+    inp.addEventListener('keydown', e => { if (e.key==='Backspace' && !inp.value && i > 0) all[i-1].focus(); });
+});
+
+// Cerrar modal con click afuera
+document.getElementById('modal-all-runs').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeAllRuns();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Runner App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+
+<div class="toast-container" id="toast-container"></div>
+
+<div class="phone">
+    <div class="screens" id="screens-container">
+
+        <!-- SPLASH -->
+        <div class="screen splash-screen active" id="s-splash">
+            <div class="splash-content">
+                <div class="splash-logo">
+                    <span class="splash-runner">RUNNER</span>
+                    <div class="splash-bar"></div>
+                    <span class="splash-app">APP</span>
+                </div>
+                <div class="splash-tagline">TRACK YOUR RUN</div>
+            </div>
+        </div>
+
+        <!-- LOGIN -->
+        <div class="screen auth-screen" id="s-login">
+            <div class="auth-brand">
+                <h1>RUNNER<br><em>APP</em></h1>
+                <p>Inicia sesion para continuar</p>
+            </div>
+            <div id="login-alert" class="alert"></div>
+            <div class="field">
+                <label class="field-label">Email</label>
+                <input type="email" class="input" id="login-email" placeholder="tu@correo.com" autocomplete="email">
+            </div>
+            <div class="field field-password">
+                <label class="field-label">Contrasena</label>
+                <input type="password" class="input" id="login-pass" placeholder="Min. 6 caracteres" autocomplete="current-password">
+                <button type="button" class="pass-toggle" aria-label="Mostrar contrasena">
+                    <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
+            <button type="button" class="btn btn-volt" id="login-btn" onclick="AuthView.doLogin()" style="margin-top:8px">INICIAR SESION</button>
+            <div class="auth-extra">
+                <span class="link" onclick="App.showScreen('s-forgot','slide-in-right')">Olvidaste tu contrasena?</span>
+            </div>
+            <div class="auth-footer">
+                No tienes cuenta? <span class="link" onclick="App.showScreen('s-register','slide-in-right')">Registrate</span>
+            </div>
+        </div>
+
+        <!-- REGISTER -->
+        <div class="screen auth-screen" id="s-register">
+            <div class="auth-brand">
+                <h1>CREAR<br><em>CUENTA</em></h1>
+                <p>Unete a la comunidad runner</p>
+            </div>
+            <div id="reg-alert" class="alert"></div>
+            <div class="field">
+                <label class="field-label">Nombre</label>
+                <input type="text" class="input" id="reg-name" placeholder="Juan Perez" autocomplete="name">
+            </div>
+            <div class="field">
+                <label class="field-label">Email</label>
+                <input type="email" class="input" id="reg-email" placeholder="tu@correo.com" autocomplete="email">
+            </div>
+            <div class="field">
+                <label class="field-label">Pais</label>
+                <input type="text" class="input" id="reg-country" value="Honduras">
+            </div>
+            <div class="field field-password">
+                <label class="field-label">Contrasena</label>
+                <input type="password" class="input" id="reg-pass" placeholder="Min. 6 caracteres" autocomplete="new-password">
+                <button type="button" class="pass-toggle" aria-label="Mostrar contrasena">
+                    <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
+            <div class="field field-password">
+                <label class="field-label">Confirmar</label>
+                <input type="password" class="input" id="reg-pass2" placeholder="Repetir contrasena" autocomplete="new-password">
+                <button type="button" class="pass-toggle" aria-label="Mostrar contrasena">
+                    <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
+            <button type="button" class="btn btn-volt" id="reg-btn" onclick="AuthView.doRegister()">CREAR CUENTA</button>
+            <div class="auth-footer">
+                Ya tienes cuenta? <span class="link" onclick="App.showScreen('s-login','slide-in-left')">Inicia sesion</span>
+            </div>
+        </div>
+
+        <!-- VERIFY -->
+        <div class="screen auth-screen" id="s-verify">
+            <div class="auth-brand">
+                <h1>VERIFICAR<br><em>EMAIL</em></h1>
+                <p>Ingresa el codigo de 6 digitos enviado a tu correo</p>
+            </div>
+            <div id="verify-alert" class="alert"></div>
+            <div class="debug-code" id="debug-wrap" style="display:none">
+                <small>Codigo de prueba local</small>
+                <div class="code" id="debug-code"></div>
+            </div>
+            <div class="code-row" id="code-row">
+                <input class="code-box" type="text" maxlength="1" data-i="0" inputmode="numeric">
+                <input class="code-box" type="text" maxlength="1" data-i="1" inputmode="numeric">
+                <input class="code-box" type="text" maxlength="1" data-i="2" inputmode="numeric">
+                <input class="code-box" type="text" maxlength="1" data-i="3" inputmode="numeric">
+                <input class="code-box" type="text" maxlength="1" data-i="4" inputmode="numeric">
+                <input class="code-box" type="text" maxlength="1" data-i="5" inputmode="numeric">
+            </div>
+            <button type="button" class="btn btn-volt" onclick="AuthView.doVerify()">VERIFICAR</button>
+            <button type="button" class="btn btn-ghost" onclick="AuthView.doResend()">Reenviar codigo</button>
+        </div>
+
+        <!-- FORGOT PASSWORD -->
+        <div class="screen auth-screen" id="s-forgot">
+            <div class="auth-brand">
+                <h1>RECUPERAR<br><em>CUENTA</em></h1>
+                <p>Ingresa tu email para recibir un codigo de recuperacion</p>
+            </div>
+            <div id="forgot-alert" class="alert"></div>
+            <div class="field">
+                <label class="field-label">Email</label>
+                <input type="email" class="input" id="forgot-email" placeholder="tu@correo.com" autocomplete="email">
+            </div>
+            <button type="button" class="btn btn-volt" id="forgot-btn" onclick="AuthView.doForgotPassword()">ENVIAR CODIGO</button>
+            <div class="auth-footer">
+                <span class="link" onclick="App.showScreen('s-login','slide-in-left')">Volver al login</span>
+            </div>
+        </div>
+
+        <!-- RESET PASSWORD -->
+        <div class="screen auth-screen" id="s-reset">
+            <div class="auth-brand">
+                <h1>NUEVA<br><em>CONTRASENA</em></h1>
+                <p>Ingresa el codigo y tu nueva contrasena</p>
+            </div>
+            <div id="reset-alert" class="alert"></div>
+            <div class="field">
+                <label class="field-label">Codigo de recuperacion</label>
+                <input type="text" class="input" id="reset-token" placeholder="Codigo recibido">
+            </div>
+            <div class="field field-password">
+                <label class="field-label">Nueva contrasena</label>
+                <input type="password" class="input" id="reset-pass" placeholder="Min. 6 caracteres" autocomplete="new-password">
+                <button type="button" class="pass-toggle" aria-label="Mostrar contrasena">
+                    <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
+            <div class="field field-password">
+                <label class="field-label">Confirmar contrasena</label>
+                <input type="password" class="input" id="reset-pass2" placeholder="Repetir contrasena" autocomplete="new-password">
+                <button type="button" class="pass-toggle" aria-label="Mostrar contrasena">
+                    <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
+            <button type="button" class="btn btn-volt" id="reset-btn" onclick="AuthView.doResetPassword()">CAMBIAR CONTRASENA</button>
+            <div class="auth-footer">
+                <span class="link" onclick="App.showScreen('s-login','slide-in-left')">Volver al login</span>
+            </div>
+        </div>
+
+        <!-- HOME -->
+        <div class="screen home-screen" id="s-home">
+            <div class="ptr-indicator" id="ptr-indicator">
+                <svg class="ptr-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                <span id="ptr-text">Desliza para actualizar</span>
+            </div>
+            <div class="home-head">
+                <div class="home-greeting">Bienvenido</div>
+                <div class="home-name" id="home-name">RUNNER</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-label">Este mes</div>
+                <div class="hero-value" id="h-km">0.0</div>
+                <div class="hero-unit">KM</div>
+            </div>
+            <div class="mini-stats">
+                <div class="mini-stat">
+                    <div class="v" id="h-runs">0</div>
+                    <div class="l">Carreras</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="v" id="h-cal">0</div>
+                    <div class="l">Kcal</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="v" id="h-pace">0:00</div>
+                    <div class="l">Min/Km</div>
+                </div>
+            </div>
+            <div class="start-wrap">
+                <button type="button" class="start-btn" onclick="RunningView.start()">START</button>
+            </div>
+            <div class="section-head-row" style="margin-top:16px">
+                <span class="sh-title">Actividad reciente</span>
+                <button type="button" class="sh-link" id="view-all-btn" onclick="HomeView.openAllRuns()" style="display:none">Ver todo</button>
+            </div>
+            <div id="runs-list"></div>
+        </div>
+
+        <!-- RUNNING -->
+        <div class="screen running-screen-map" id="s-running">
+            <div id="run-live-map" class="run-map"></div>
+            <div class="run-overlay-top">
+                <div class="run-active-label">
+                    <span class="pulse-dot"></span> En carrera
+                </div>
+                <div class="run-timer" id="run-timer">00:00:00</div>
+            </div>
+            <div class="run-overlay-bottom">
+                <div class="run-live-stats">
+                    <div class="run-live-stat">
+                        <div class="v" id="run-km">0.00</div>
+                        <div class="l">KM</div>
+                    </div>
+                    <div class="run-live-stat">
+                        <div class="v" id="run-cal">0</div>
+                        <div class="l">KCAL</div>
+                    </div>
+                    <div class="run-live-stat">
+                        <div class="v" id="run-pace">0:00</div>
+                        <div class="l">MIN/KM</div>
+                    </div>
+                </div>
+                <div class="run-actions">
+                    <button type="button" class="btn btn-volt" id="run-stop" onclick="RunningView.stop()">FINALIZAR</button>
+                    <button type="button" class="btn btn-outline" onclick="RunningView.cancel()">CANCELAR</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST-RUN SUMMARY -->
+        <div class="screen summary-screen" id="s-summary">
+            <div class="summary-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="summary-title">CARRERA COMPLETA</div>
+            <div class="summary-subtitle">Excelente trabajo!</div>
+            <div class="summary-stats">
+                <div class="summary-stat">
+                    <div class="v" id="sum-km">0.00</div>
+                    <div class="l">Kilometros</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="v" id="sum-time">00:00</div>
+                    <div class="l">Tiempo</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="v" id="sum-cal">0</div>
+                    <div class="l">Calorias</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="v" id="sum-pace">0:00</div>
+                    <div class="l">Min/Km</div>
+                </div>
+            </div>
+            <div class="summary-actions">
+                <button type="button" class="btn btn-volt" onclick="RunningView.closeSummary()" style="flex:1">CONTINUAR</button>
+                <button type="button" class="btn btn-outline" onclick="RunningView.share()" style="flex:1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;vertical-align:middle;margin-right:6px"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>COMPARTIR
+                </button>
+            </div>
+        </div>
+
+        <!-- RUN DETAIL (mapa de ruta) -->
+        <div class="screen run-detail-screen" id="s-run-detail">
+            <div class="detail-header">
+                <button type="button" class="detail-back" onclick="App.nav('s-home')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <span class="detail-title">DETALLE DE CARRERA</span>
+                <button type="button" class="detail-delete" id="detail-delete-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+            </div>
+            <div id="detail-map" class="detail-map"></div>
+            <div class="detail-stats">
+                <div class="detail-stat"><div class="v" id="det-km" style="color:var(--volt)">0.00</div><div class="l">KM</div></div>
+                <div class="detail-stat"><div class="v" id="det-time">00:00</div><div class="l">Tiempo</div></div>
+                <div class="detail-stat"><div class="v" id="det-cal" style="color:var(--orange)">0</div><div class="l">Kcal</div></div>
+                <div class="detail-stat"><div class="v" id="det-pace" style="color:var(--blue)">0:00</div><div class="l">Min/Km</div></div>
+            </div>
+            <div class="detail-date" id="det-date"></div>
+        </div>
+
+        <!-- STATS -->
+        <div class="screen stats-screen" id="s-stats">
+            <div class="stats-title">TUS STATS</div>
+            <div id="stats-content">
+                <!-- Resumen mensual -->
+                <div class="compare-block" id="stats-summary" style="display:none">
+                    <div class="compare-label">Resumen del Mes</div>
+                    <div class="compare-grid" id="stats-summary-grid"></div>
+                </div>
+
+                <!-- Grafico de barras semanal -->
+                <div class="chart-block" id="chart-weekly-block" style="display:none">
+                    <div class="chart-header">
+                        <span class="chart-title">Kilometros por Dia</span>
+                        <span class="chart-subtitle" id="chart-weekly-sub">Esta semana</span>
+                    </div>
+                    <canvas id="chart-weekly" width="460" height="220"></canvas>
+                </div>
+
+                <!-- Comparacion semanal -->
+                <div class="compare-block" id="stats-weekly-cmp" style="display:none">
+                    <div class="compare-label">Semanal</div>
+                    <div class="compare-grid" id="stats-weekly-grid"></div>
+                </div>
+
+                <!-- Grafico de linea mensual -->
+                <div class="chart-block" id="chart-monthly-block" style="display:none">
+                    <div class="chart-header">
+                        <span class="chart-title">Tendencia Mensual</span>
+                        <span class="chart-subtitle" id="chart-monthly-sub">Ultimos meses</span>
+                    </div>
+                    <canvas id="chart-monthly" width="460" height="220"></canvas>
+                </div>
+
+                <!-- Comparacion mensual -->
+                <div class="compare-block" id="stats-monthly-cmp" style="display:none">
+                    <div class="compare-label">Mensual</div>
+                    <div class="compare-grid" id="stats-monthly-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FRIENDS -->
+        <div class="screen friends-screen" id="s-friends">
+            <div class="friends-title">SOCIAL</div>
+            <div id="pending-section" style="display:none">
+                <div class="section-head" style="padding-left:28px">Solicitudes pendientes</div>
+                <div id="pending-list"></div>
+            </div>
+            <div class="section-head" style="padding-left:28px">Clasificacion del Mes</div>
+            <div id="leaderboard"></div>
+            <div class="section-head" style="padding:20px 28px 12px">Mis Amigos</div>
+            <div id="friends-list"></div>
+            <div class="section-head" style="padding:20px 28px 12px">Descubrir</div>
+            <div id="discover-list"></div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="screen profile-screen" id="s-profile">
+            <div class="prof-head">
+                <div class="prof-avatar" id="pf-avatar" onclick="document.getElementById('photo-input').click()">
+                    <span id="pf-avatar-letter">?</span>
+                    <div class="prof-avatar-overlay">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    </div>
+                </div>
+                <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="ProfileView.uploadPhoto(this)">
+                <div class="prof-name" id="pf-name">-</div>
+                <div class="prof-country" id="pf-country">-</div>
+            </div>
+            <div class="prof-stats">
+                <div class="prof-stat"><div class="v" id="pf-km">0</div><div class="l">KM Total</div></div>
+                <div class="prof-stat"><div class="v" id="pf-cal">0</div><div class="l">Calorias</div></div>
+                <div class="prof-stat"><div class="v" id="pf-runs">0</div><div class="l">Carreras</div></div>
+            </div>
+            <div class="achievements-section">
+                <div class="achievements-header">
+                    <span class="section-head" style="padding:0;margin:0">Logros</span>
+                    <span class="achievements-counter" id="ach-counter">0/11 desbloqueados</span>
+                </div>
+                <div id="achievements-list"></div>
+            </div>
+            <div class="field">
+                <label class="field-label">Nombre</label>
+                <input type="text" class="input" id="pf-name-in">
+            </div>
+            <div class="field">
+                <label class="field-label">Pais</label>
+                <input type="text" class="input" id="pf-country-in">
+            </div>
+            <button type="button" class="btn btn-outline" onclick="ProfileView.update()">GUARDAR CAMBIOS</button>
+            <button type="button" class="logout-btn" onclick="AuthView.doLogout()">CERRAR SESION</button>
+        </div>
+
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bnav" id="bnav">
+        <button type="button" class="bnav-item active" data-s="s-home" onclick="App.nav('s-home')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <span>Inicio</span>
+        </button>
+        <button type="button" class="bnav-item" data-s="s-stats" onclick="App.nav('s-stats')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span>Stats</span>
+        </button>
+        <button type="button" class="bnav-item" data-s="s-friends" onclick="App.nav('s-friends')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Social</span>
+        </button>
+        <button type="button" class="bnav-item" data-s="s-profile" onclick="App.nav('s-profile')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg>
+            <span>Perfil</span>
+        </button>
+    </nav>
+</div>
+
+<!-- Modal: Historial completo -->
+<div class="modal-overlay" id="modal-all-runs">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>HISTORIAL</h2>
+            <button type="button" class="modal-close" onclick="HomeView.closeAllRuns()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div id="all-runs-list"></div>
+    </div>
+</div>
+
+<!-- Leaflet JS (mapa de ruta gratuito) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- JS: Modelo → Utilidades → Vistas → Controlador -->
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/views/auth.js"></script>
+<script src="js/views/home.js"></script>
+<script src="js/views/running.js"></script>
+<script src="js/views/stats.js"></script>
+<script src="js/views/friends.js"></script>
+<script src="js/views/profile.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
