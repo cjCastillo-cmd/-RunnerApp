@@ -125,7 +125,6 @@
 
     <!-- Errores -->
     <string name="error_connection">Error de conexion</string>
-    <string name="error_processing_response">Error procesando respuesta</string>
     <string name="error_wrong_credentials">Credenciales incorrectas</string>
     <string name="error_wrong_code">Codigo incorrecto</string>
     <string name="error_email_not_found">Correo no registrado</string>
@@ -139,7 +138,6 @@
     <string name="error_deleting_run">Error al eliminar</string>
     <string name="error_uploading_photo">Error subiendo foto</string>
     <string name="error_send_request">No se pudo enviar la solicitud</string>
-    <string name="error_generic">Error: %1$s</string>
     <string name="error_permissions_location">Se requieren permisos de ubicacion</string>
 
     <!-- Exitos -->
@@ -194,6 +192,13 @@
 
     <!-- Accesibilidad -->
     <string name="cd_user_avatar">Avatar del usuario</string>
+    <string name="hint_verification_digit">Digito</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_stats">Stats</string>
+    <string name="nav_social">Social</string>
+    <string name="nav_profile">Perfil</string>
 
     <!-- Paises -->
     <string-array name="countries">

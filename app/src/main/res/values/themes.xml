@@ -80,30 +80,11 @@
         <item name="cornerRadius">20dp</item>
     </style>
 
-    <!-- Texto base -->
-    <style name="RunnerText" parent="">
-        <item name="android:textColor">@color/text_primary</item>
-    </style>
-
-    <!-- Texto numeros grandes — elegante light -->
-    <style name="RunnerText.Display">
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="android:letterSpacing">0.02</item>
-    </style>
-
     <!-- Avatar circular -->
     <style name="CircleImageView" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
 
-    <!-- Bottom navigation -->
-    <style name="RunnerBottomNav" parent="Widget.Material3.BottomNavigationView">
-        <item name="backgroundTint">@color/surface</item>
-        <item name="itemIconTint">@color/text_secondary</item>
-        <item name="itemTextColor">@color/text_secondary</item>
-        <item name="itemActiveIndicatorStyle">@null</item>
-    </style>
 
 </resources>

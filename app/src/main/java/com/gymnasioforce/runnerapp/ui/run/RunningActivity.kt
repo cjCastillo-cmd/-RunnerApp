@@ -85,7 +85,7 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
 
     private fun startRun() {
         val intent = Intent(this, RunningService::class.java).apply { action = RunningService.ACTION_START }
-        startForegroundService(intent)
+        androidx.core.content.ContextCompat.startForegroundService(this, intent)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         b.btnFinish.text = getString(R.string.btn_finish)
         b.btnCancel.visibility = View.GONE

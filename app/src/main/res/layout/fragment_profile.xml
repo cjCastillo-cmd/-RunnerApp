@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="0dp"
@@ -65,6 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:baselineAligned="false"
                 android:layout_marginTop="24dp">
 
                 <!-- KM total -->
@@ -93,7 +93,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_km_total"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:textColor="@color/text_secondary"
                         android:letterSpacing="0.2" />
                 </LinearLayout>
@@ -124,7 +124,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_calories"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:textColor="@color/text_secondary"
                         android:letterSpacing="0.2" />
                 </LinearLayout>
@@ -155,7 +155,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_runs"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:textColor="@color/text_secondary"
                         android:letterSpacing="0.2" />
                 </LinearLayout>
@@ -174,6 +174,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:baselineAligned="false"
                 android:gravity="center_vertical"
                 android:layout_marginTop="24dp">
 

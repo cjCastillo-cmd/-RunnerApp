@@ -24,14 +24,9 @@
     <color name="accent_20">#334D8AFF</color>
     <color name="accent_40">#664D8AFF</color>
 
-    <!-- Compatibilidad (aliases) -->
-    <color name="black">#FF000000</color>
+    <!-- Compatibilidad (aliases usados en codigo Kotlin) -->
     <color name="white">#FFFFFFFF</color>
     <color name="volt">@color/accent</color>
     <color name="orange">@color/amber</color>
     <color name="blue">@color/cyan</color>
-    <color name="volt_20">@color/accent_20</color>
-    <color name="volt_40">@color/accent_40</color>
-    <color name="volt_60">@color/accent_40</color>
-    <color name="black_50">#800D1117</color>
 </resources>

@@ -15,7 +15,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/ic_run"
-        android:tint="@color/accent"
+        app:tint="@color/accent"
         android:alpha="0.3"
         android:contentDescription="@string/cd_user_avatar"
         app:layout_constraintTop_toTopOf="parent"
