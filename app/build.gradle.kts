@@ -8,6 +8,15 @@ android {
     namespace = "com.gymnasioforce.runnerapp"
     compileSdk = 36
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("runner-release.jks")
+            storePassword = "RunnerApp2026"
+            keyAlias = "runnerapp"
+            keyPassword = "RunnerApp2026"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.gymnasioforce.runnerapp"
         minSdk = 24
@@ -25,6 +34,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

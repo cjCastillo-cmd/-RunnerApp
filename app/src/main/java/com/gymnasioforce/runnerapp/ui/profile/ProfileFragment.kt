@@ -9,7 +9,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.gymnasioforce.runnerapp.R
+import com.gymnasioforce.runnerapp.data.AchievementCalculator
 import com.gymnasioforce.runnerapp.databinding.FragmentProfileBinding
 import com.gymnasioforce.runnerapp.network.RetrofitClient
 import com.gymnasioforce.runnerapp.ui.auth.LoginActivity
@@ -38,6 +40,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, state: Bundle?) {
         super.onViewCreated(view, state)
         setupCountryDropdown()
+        b.rvAchievements.layoutManager = LinearLayoutManager(requireContext())
         loadProfile()
         b.ivAvatar.setOnClickListener { pickPhoto.launch("image/*") }
         b.btnSave.setOnClickListener { saveProfile() }
@@ -61,6 +64,14 @@ class ProfileFragment : Fragment() {
                     b.tvCountry.text = user.country
                     b.tvStatKm.text = "%.1f".format(user.totalKm)
                     b.tvStatKcal.text = "${user.totalCalories}"
+                    // Cargar stats para logros
+                    try {
+                        val statsResp = RetrofitClient.api.getMonthlyStats()
+                        val runs = statsResp.body()?.data?.totalRuns ?: 0
+                        loadAchievements(runs, user.totalKm, user.totalCalories)
+                    } catch (_: Exception) {
+                        loadAchievements(0, user.totalKm, user.totalCalories)
+                    }
                     if (user.photoUrl != null) {
                         Glide.with(this@ProfileFragment).load(user.photoUrl).circleCrop().into(b.ivAvatar)
                     } else {
@@ -69,6 +80,13 @@ class ProfileFragment : Fragment() {
                 }
             } catch (e: Exception) { showToast(getString(R.string.error_loading_profile)) }
         }
+    }
+
+    private fun loadAchievements(totalRuns: Int, totalKm: Double, totalCalories: Int) {
+        val achievements = AchievementCalculator.calculate(totalRuns, totalKm, totalCalories)
+        b.rvAchievements.adapter = AchievementAdapter(achievements)
+        val unlocked = achievements.count { it.unlocked }
+        b.tvAchievementsCount.text = getString(R.string.achievements_unlocked, unlocked, achievements.size)
     }
 
     private fun saveProfile() {

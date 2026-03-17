@@ -166,6 +166,32 @@
     <string name="notif_channel_milestone">Kilometros completados</string>
     <string name="notif_channel_milestone_desc">Notificacion al completar cada kilometro</string>
 
+    <!-- Logros -->
+    <string name="title_achievements">LOGROS</string>
+    <string name="achievement_first_km">Primer Kilometro</string>
+    <string name="achievement_first_km_desc">Corre tu primer kilometro</string>
+    <string name="achievement_10km">10K Runner</string>
+    <string name="achievement_10km_desc">Acumula 10 km en total</string>
+    <string name="achievement_marathon">Maratonista</string>
+    <string name="achievement_marathon_desc">Acumula 42.195 km (un maraton)</string>
+    <string name="achievement_100km">Centurion</string>
+    <string name="achievement_100km_desc">Acumula 100 km en total</string>
+    <string name="achievement_500km">Ultrarunner</string>
+    <string name="achievement_500km_desc">Acumula 500 km en total</string>
+    <string name="achievement_first_run">Primera Carrera</string>
+    <string name="achievement_first_run_desc">Completa tu primera carrera</string>
+    <string name="achievement_10_runs">Constante</string>
+    <string name="achievement_10_runs_desc">Completa 10 carreras</string>
+    <string name="achievement_50_runs">Dedicado</string>
+    <string name="achievement_50_runs_desc">Completa 50 carreras</string>
+    <string name="achievement_100_runs">Imparable</string>
+    <string name="achievement_100_runs_desc">Completa 100 carreras</string>
+    <string name="achievement_1000cal">Quema Calorias</string>
+    <string name="achievement_1000cal_desc">Quema 1,000 calorias</string>
+    <string name="achievement_10000cal">Horno Humano</string>
+    <string name="achievement_10000cal_desc">Quema 10,000 calorias</string>
+    <string name="achievements_unlocked">%1$d / %2$d desbloqueados</string>
+
     <!-- Accesibilidad -->
     <string name="cd_user_avatar">Avatar del usuario</string>
 
