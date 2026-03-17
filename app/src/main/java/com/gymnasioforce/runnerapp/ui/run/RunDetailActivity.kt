@@ -64,15 +64,15 @@ class RunDetailActivity : BaseActivity() {
     private fun setupMap() {
         mapView = b.mapView
 
-        val darkTileSource = XYTileSource(
-            "CartoDB_DarkMatter", 0, 19, 256, ".png",
+        val tileSource = XYTileSource(
+            "CartoDB_Voyager", 0, 19, 256, ".png",
             arrayOf(
-                "https://a.basemaps.cartocdn.com/dark_all/",
-                "https://b.basemaps.cartocdn.com/dark_all/",
-                "https://c.basemaps.cartocdn.com/dark_all/"
+                "https://a.basemaps.cartocdn.com/rastertiles/voyager/",
+                "https://b.basemaps.cartocdn.com/rastertiles/voyager/",
+                "https://c.basemaps.cartocdn.com/rastertiles/voyager/"
             )
         )
-        mapView.setTileSource(darkTileSource)
+        mapView.setTileSource(tileSource)
         mapView.setMultiTouchControls(true)
         mapView.controller.setZoom(15.0)
     }

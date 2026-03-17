@@ -98,7 +98,11 @@ class RunningService : Service() {
         override fun onLocationResult(result: LocationResult) {
             val location = result.lastLocation ?: return
 
-            if (startLocation == null) startLocation = location
+            if (startLocation == null) {
+                startLocation = location
+                // Agregar primer punto de la ruta
+                routePoints.add(mapOf("lat" to location.latitude, "lng" to location.longitude))
+            }
 
             lastLocation?.let { prev ->
                 val dist = prev.distanceTo(location)
