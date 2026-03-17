@@ -5,28 +5,25 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.gymnasioforce.runnerapp.ui.BaseActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.PolylineOptions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.data.local.AppDatabase
-import com.gymnasioforce.runnerapp.data.local.RunEntity
 import com.gymnasioforce.runnerapp.databinding.ActivityRunDetailBinding
 import com.gymnasioforce.runnerapp.network.RetrofitClient
 import com.gymnasioforce.runnerapp.utils.showToast
 import kotlinx.coroutines.launch
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.XYTileSource
+import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Polyline
 
-class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
+class RunDetailActivity : BaseActivity() {
 
     private lateinit var b: ActivityRunDetailBinding
-    private var gMap: GoogleMap? = null
+    private lateinit var mapView: MapView
     private var runId: Int = 0
     private var routeJson: String? = null
     private var distanceKm: Double = 0.0
@@ -38,6 +35,10 @@ class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
+        Configuration.getInstance().userAgentValue = packageName
+
         b = ActivityRunDetailBinding.inflate(layoutInflater)
         setContentView(b.root)
 
@@ -50,14 +51,29 @@ class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
         createdAt = intent.getStringExtra("created_at") ?: ""
         photoUrl = intent.getStringExtra("photo_url")
 
-        val mapFrag = supportFragmentManager.findFragmentById(R.id.mapFragment) as? SupportMapFragment
-        mapFrag?.getMapAsync(this)
-
+        setupMap()
         displayStats()
         loadPhoto()
+        drawRoute()
 
         b.btnBack.setOnClickListener { finish() }
         b.btnDelete.setOnClickListener { deleteRun() }
+    }
+
+    private fun setupMap() {
+        mapView = b.mapView
+
+        val darkTileSource = XYTileSource(
+            "CartoDB_DarkMatter", 0, 19, 256, ".png",
+            arrayOf(
+                "https://a.basemaps.cartocdn.com/dark_all/",
+                "https://b.basemaps.cartocdn.com/dark_all/",
+                "https://c.basemaps.cartocdn.com/dark_all/"
+            )
+        )
+        mapView.setTileSource(darkTileSource)
+        mapView.setMultiTouchControls(true)
+        mapView.controller.setZoom(15.0)
     }
 
     private fun displayStats() {
@@ -72,15 +88,6 @@ class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
         } ?: run { b.tvPace.text = "-" }
     }
 
-    override fun onMapReady(map: GoogleMap) {
-        gMap = map
-        try {
-            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
-        } catch (_: Exception) {}
-        map.uiSettings.isZoomControlsEnabled = true
-        drawRoute()
-    }
-
     private fun drawRoute() {
         val json = routeJson ?: return
         val type = object : TypeToken<List<Map<String, Double>>>() {}.type
@@ -90,24 +97,26 @@ class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
 
         if (points.isEmpty()) return
 
-        val latLngs = points.mapNotNull { m ->
+        val geoPoints = points.mapNotNull { m ->
             val lat = m["lat"] ?: return@mapNotNull null
             val lng = m["lng"] ?: return@mapNotNull null
-            LatLng(lat, lng)
+            GeoPoint(lat, lng)
         }
 
-        if (latLngs.isEmpty()) return
+        if (geoPoints.isEmpty()) return
 
-        gMap?.addPolyline(
-            PolylineOptions()
-                .addAll(latLngs)
-                .color(getColor(R.color.volt))
-                .width(8f)
-        )
+        val polyline = Polyline().apply {
+            setPoints(geoPoints)
+            outlinePaint.color = getColor(R.color.volt)
+            outlinePaint.strokeWidth = 8f
+        }
+        mapView.overlays.add(polyline)
 
-        val bounds = LatLngBounds.Builder()
-        latLngs.forEach { bounds.include(it) }
-        gMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 80))
+        // Ajustar camara a los bounds de la ruta
+        val boundingBox = BoundingBox.fromGeoPoints(geoPoints)
+        mapView.post {
+            mapView.zoomToBoundingBox(boundingBox, true, 80)
+        }
     }
 
     private fun loadPhoto() {
@@ -133,5 +142,15 @@ class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
                 showToast(getString(R.string.error_connection))
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
     }
 }

@@ -62,10 +62,6 @@
             android:name=".services.FCMService"
             android:exported="false" />
 
-        <!-- Google Maps API Key -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="TU_GOOGLE_MAPS_API_KEY" />
 
     </application>
 </manifest>

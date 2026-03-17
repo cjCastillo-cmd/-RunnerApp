@@ -90,7 +90,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     // GPS / Maps
-    implementation(libs.play.services.maps)
+    implementation(libs.osmdroid)
     implementation(libs.play.services.location)
 
     // Imagen

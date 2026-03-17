@@ -3,13 +3,13 @@ package com.gymnasioforce.runnerapp.ui.run
 import android.Manifest
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.*
 import android.view.View
 import com.gymnasioforce.runnerapp.ui.BaseActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.data.local.AppDatabase
@@ -20,11 +20,16 @@ import com.gymnasioforce.runnerapp.network.SaveRunRequest
 import com.gymnasioforce.runnerapp.services.RunningService
 import com.gymnasioforce.runnerapp.utils.showToast
 import kotlinx.coroutines.launch
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.XYTileSource
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Polyline
 
-class RunningActivity : BaseActivity(), OnMapReadyCallback {
+class RunningActivity : BaseActivity() {
 
     private lateinit var b: ActivityRunningBinding
-    private var gMap: GoogleMap? = null
+    private lateinit var mapView: MapView
     private var polyline: Polyline? = null
     private var isBound = false
 
@@ -45,26 +50,43 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Configurar osmdroid
+        Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
+        Configuration.getInstance().userAgentValue = packageName
+
         b = ActivityRunningBinding.inflate(layoutInflater)
         setContentView(b.root)
 
-        val mapFrag = supportFragmentManager.findFragmentById(R.id.mapFragment) as? SupportMapFragment
-        mapFrag?.getMapAsync(this)
+        setupMap()
 
         b.btnFinish.setOnClickListener { toggleRun() }
         b.btnCancel.setOnClickListener { finish() }
     }
 
-    override fun onMapReady(map: GoogleMap) {
-        gMap = map
-        // Aplicar estilo oscuro al mapa
-        try {
-            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
-        } catch (_: Exception) {}
+    private fun setupMap() {
+        mapView = b.mapView
 
+        // Tiles oscuros gratuitos (CartoDB Dark Matter)
+        val darkTileSource = XYTileSource(
+            "CartoDB_DarkMatter", 0, 19, 256, ".png",
+            arrayOf(
+                "https://a.basemaps.cartocdn.com/dark_all/",
+                "https://b.basemaps.cartocdn.com/dark_all/",
+                "https://c.basemaps.cartocdn.com/dark_all/"
+            )
+        )
+        mapView.setTileSource(darkTileSource)
+        mapView.setMultiTouchControls(true)
+        mapView.controller.setZoom(16.0)
+
+        // Centrar en ubicacion si hay permiso
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
-            gMap?.isMyLocationEnabled = true
+            mapView.overlays.add(org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay(mapView).apply {
+                enableMyLocation()
+                enableFollowLocation()
+            })
         }
     }
 
@@ -85,7 +107,7 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
 
     private fun startRun() {
         val intent = Intent(this, RunningService::class.java).apply { action = RunningService.ACTION_START }
-        androidx.core.content.ContextCompat.startForegroundService(this, intent)
+        ContextCompat.startForegroundService(this, intent)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         b.btnFinish.text = getString(R.string.btn_finish)
         b.btnCancel.visibility = View.GONE
@@ -101,7 +123,6 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
         val start = RunningService.startLocation
         val end = RunningService.lastLocation
         val route = Gson().toJson(RunningService.routePoints)
-        val calories = (km * 70).toInt()
 
         if (km < 0.01) {
             showToast(getString(R.string.msg_short_run))
@@ -120,7 +141,6 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
                     routeJson = route
                 ))
                 if (resp.isSuccessful) {
-                    // Guardar en SQLite local
                     resp.body()?.data?.let { run ->
                         val entity = RunEntity(
                             id = run.id, userId = run.userId,
@@ -133,7 +153,6 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
                         )
                         AppDatabase.getInstance(this@RunningActivity).runDao().insert(entity)
 
-                        // Mostrar pantalla de resumen
                         val summaryIntent = Intent(this@RunningActivity, RunSummaryActivity::class.java).apply {
                             putExtra("run_id", run.id)
                             putExtra("distance_km", run.distanceKm)
@@ -164,14 +183,21 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
         b.tvKcal.text = "${(km * 70).toInt()}"
 
         if (RunningService.routePoints.size > 1) {
-            val points = RunningService.routePoints.mapNotNull { m ->
+            val geoPoints = RunningService.routePoints.mapNotNull { m ->
                 val lat = m["lat"] ?: return@mapNotNull null
                 val lng = m["lng"] ?: return@mapNotNull null
-                LatLng(lat, lng)
+                GeoPoint(lat, lng)
             }
-            polyline?.remove()
-            polyline = gMap?.addPolyline(PolylineOptions().addAll(points).color(getColor(R.color.volt)).width(8f))
-            gMap?.animateCamera(CameraUpdateFactory.newLatLng(points.last()))
+
+            polyline?.let { mapView.overlays.remove(it) }
+            polyline = Polyline().apply {
+                setPoints(geoPoints)
+                outlinePaint.color = getColor(R.color.volt)
+                outlinePaint.strokeWidth = 8f
+            }
+            mapView.overlays.add(polyline)
+            mapView.controller.animateTo(geoPoints.last())
+            mapView.invalidate()
         }
     }
 
@@ -179,6 +205,16 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 100 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) startRun()
         else showToast(getString(R.string.error_permissions_location))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
     }
 
     override fun onDestroy() {
