@@ -1,0 +1,144 @@
+<resources>
+    <string name="app_name">RunnerApp</string>
+
+    <!-- Branding -->
+    <string name="app_title_runner">RUNNER</string>
+    <string name="app_title_app">APP</string>
+    <string name="tagline">CORRE. MIDE. SUPERATE.</string>
+
+    <!-- Auth -->
+    <string name="hint_email">EMAIL</string>
+    <string name="hint_password">CONTRASENA</string>
+    <string name="hint_confirm_password">CONFIRMAR CONTRASENA</string>
+    <string name="hint_name">NOMBRE</string>
+    <string name="hint_country">PAIS</string>
+    <string name="btn_login">INICIAR SESION</string>
+    <string name="no_account_prompt">No tienes cuenta? </string>
+    <string name="btn_create_account">Crear cuenta</string>
+    <string name="title_create_account">CREAR\nCUENTA</string>
+    <string name="btn_register">CREAR CUENTA</string>
+    <string name="has_account_prompt">Ya tienes cuenta? </string>
+    <string name="btn_go_login">Iniciar sesion</string>
+
+    <!-- Verificar email -->
+    <string name="title_verify_email">VERIFICAR\nEMAIL</string>
+    <string name="verify_email_description">Ingresa el codigo de 6 digitos que enviamos a tu email</string>
+    <string name="placeholder_email">usuario@email.com</string>
+    <string name="btn_verify">VERIFICAR</string>
+    <string name="btn_resend_code">Reenviar codigo</string>
+    <string name="resend_timer">Reenviar en 60s</string>
+
+    <!-- Recuperar cuenta -->
+    <string name="title_recover_account">RECUPERAR\nCUENTA</string>
+    <string name="recover_description">Ingresa tu email para recibir un token de restablecimiento</string>
+    <string name="btn_send_token">ENVIAR TOKEN</string>
+    <string name="btn_back_to_login">Volver al login</string>
+
+    <!-- Labels comunes -->
+    <string name="label_time">TIEMPO</string>
+    <string name="label_km">KM</string>
+    <string name="label_km_suffix">" KM"</string>
+    <string name="label_km_lower">" km"</string>
+    <string name="label_kcal">KCAL</string>
+    <string name="label_min_km">MIN/KM</string>
+    <string name="label_distance">DISTANCIA</string>
+    <string name="label_total_distance">DISTANCIA TOTAL</string>
+    <string name="label_runs">CARRERAS</string>
+    <string name="label_runs_count">RUNS</string>
+    <string name="label_calories">CALORIAS</string>
+    <string name="label_km_total">KM TOTAL</string>
+    <string name="label_kilometers">KILOMETROS</string>
+    <string name="label_avg_pace">RITMO PROM</string>
+
+    <!-- Defaults / placeholders -->
+    <string name="default_zero">0</string>
+    <string name="default_zero_decimal">0.0</string>
+    <string name="default_km">0.00</string>
+    <string name="default_time_short">00:00</string>
+    <string name="default_duration">00:00:00</string>
+    <string name="default_pace">0:00</string>
+    <string name="default_date">16 Mar 2026</string>
+    <string name="default_kcal">0 kcal</string>
+    <string name="default_km_distance">0.0 km</string>
+    <string name="default_diff_km">+0.0 km</string>
+    <string name="default_diff_zero">+0</string>
+    <string name="default_diff_kcal">+0 kcal</string>
+    <string name="default_diff_pace">-0:00</string>
+    <string name="placeholder_position">1</string>
+    <string name="placeholder_name">Nombre</string>
+    <string name="placeholder_country">Pais</string>
+
+    <!-- Running -->
+    <string name="btn_cancel">CANCELAR</string>
+    <string name="btn_finish">FINALIZAR</string>
+    <string name="btn_start">START</string>
+    <string name="cd_start_run">Iniciar carrera</string>
+
+    <!-- Run detail / summary -->
+    <string name="btn_delete_run">ELIMINAR CARRERA</string>
+    <string name="title_run_completed">CARRERA COMPLETADA</string>
+    <string name="btn_share">COMPARTIR</string>
+    <string name="btn_close">CERRAR</string>
+    <string name="btn_view_route">VER RUTA</string>
+
+    <!-- Home -->
+    <string name="greeting_default">BUENOS DIAS</string>
+    <string name="default_runner_name">CORREDOR</string>
+    <string name="label_recent_runs">CARRERAS RECIENTES</string>
+    <string name="empty_runs_message">Aun no tienes carreras.\nPresiona START para comenzar!</string>
+
+    <!-- Profile -->
+    <string name="label_edit_profile">EDITAR PERFIL</string>
+    <string name="btn_save_changes">GUARDAR CAMBIOS</string>
+    <string name="btn_logout">CERRAR SESION</string>
+
+    <!-- Stats -->
+    <string name="title_your_stats">TUS STATS</string>
+    <string name="label_this_week">ESTA SEMANA</string>
+    <string name="label_this_month">ESTE MES</string>
+    <string name="empty_stats_message">Completa tu primera carrera para ver estadisticas</string>
+
+    <!-- Social / Friends -->
+    <string name="title_social">SOCIAL</string>
+    <string name="label_monthly_ranking">CLASIFICACION DEL MES</string>
+    <string name="empty_leaderboard">Agrega amigos para ver la clasificacion</string>
+    <string name="label_pending_requests">SOLICITUDES PENDIENTES</string>
+    <string name="empty_requests">Sin solicitudes pendientes</string>
+    <string name="label_my_friends">MIS AMIGOS</string>
+    <string name="empty_friends">Aun no tienes amigos. Descubre corredores abajo!</string>
+    <string name="label_discover">DESCUBRIR</string>
+    <string name="empty_discover">No hay corredores nuevos por ahora</string>
+    <string name="btn_add">AGREGAR</string>
+    <string name="btn_accept">ACEPTAR</string>
+    <string name="btn_reject">X</string>
+    <string name="request_message">quiere ser tu amigo</string>
+
+    <!-- Accesibilidad -->
+    <string name="cd_user_avatar">Avatar del usuario</string>
+
+    <!-- Paises -->
+    <string-array name="countries">
+        <item>Argentina</item>
+        <item>Bolivia</item>
+        <item>Brasil</item>
+        <item>Chile</item>
+        <item>Colombia</item>
+        <item>Costa Rica</item>
+        <item>Cuba</item>
+        <item>Ecuador</item>
+        <item>El Salvador</item>
+        <item>Espana</item>
+        <item>Estados Unidos</item>
+        <item>Guatemala</item>
+        <item>Honduras</item>
+        <item>Mexico</item>
+        <item>Nicaragua</item>
+        <item>Panama</item>
+        <item>Paraguay</item>
+        <item>Peru</item>
+        <item>Puerto Rico</item>
+        <item>Republica Dominicana</item>
+        <item>Uruguay</item>
+        <item>Venezuela</item>
+    </string-array>
+</resources>

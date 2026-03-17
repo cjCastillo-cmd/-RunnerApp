@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:padding="32dp">
+
+    <!-- Titulo -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_verify_email"
+        android:textSize="48sp"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        android:lineSpacingExtra="-8sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="60dp" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="48dp"
+        android:layout_height="4dp"
+        android:background="@color/volt"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <!-- Descripcion -->
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/verify_email_description"
+        android:textSize="15sp"
+        android:textColor="@color/text_secondary"
+        android:lineSpacingExtra="4sp"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp" />
+
+    <!-- Email del usuario -->
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_email"
+        android:textSize="14sp"
+        android:textColor="@color/volt"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/tvDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="4dp" />
+
+    <!-- 6 digitos del codigo -->
+    <LinearLayout
+        android:id="@+id/codeContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tvEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp">
+
+        <EditText
+            android:id="@+id/etCode1"
+            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:background="@color/surface"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/volt"
+            android:textSize="28sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/etCode2"
+            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:background="@color/surface"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/volt"
+            android:textSize="28sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/etCode3"
+            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:background="@color/surface"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/volt"
+            android:textSize="28sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/etCode4"
+            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:background="@color/surface"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/volt"
+            android:textSize="28sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/etCode5"
+            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:background="@color/surface"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/volt"
+            android:textSize="28sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/etCode6"
+            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:background="@color/surface"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/volt"
+            android:textSize="28sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"
+            android:importantForAutofill="no" />
+    </LinearLayout>
+
+    <!-- Error -->
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:textSize="13sp"
+        android:textAlignment="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/codeContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <!-- Boton Verificar -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVerify"
+        style="@style/RunnerButton.Volt"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:text="@string/btn_verify"
+        app:layout_constraintTop_toBottomOf="@id/tvError"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:visibility="gone"
+        android:indeterminateTint="@color/black"
+        app:layout_constraintTop_toTopOf="@id/btnVerify"
+        app:layout_constraintBottom_toBottomOf="@id/btnVerify"
+        app:layout_constraintStart_toStartOf="@id/btnVerify"
+        app:layout_constraintEnd_toEndOf="@id/btnVerify" />
+
+    <!-- Boton Reenviar -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnResend"
+        style="@style/RunnerButton.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_resend_code"
+        android:textColor="@color/volt"
+        app:layout_constraintTop_toBottomOf="@id/btnVerify"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Contador -->
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/resend_timer"
+        android:textSize="13sp"
+        android:textColor="@color/text_tertiary"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/btnResend"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

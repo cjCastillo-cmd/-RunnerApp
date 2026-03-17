@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/surface"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="14dp"
+    android:layout_marginBottom="8dp">
+
+    <!-- Fecha -->
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_date"
+        android:textSize="12sp"
+        android:textColor="@color/text_tertiary"
+        android:letterSpacing="0.1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- KM -->
+    <TextView
+        android:id="@+id/tvKm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_km"
+        android:textSize="32sp"
+        android:textColor="@color/volt"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:includeFontPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/tvDate"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/tvKmLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_km_lower"
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvKm"
+        app:layout_constraintStart_toEndOf="@id/tvKm" />
+
+    <!-- Duracion -->
+    <TextView
+        android:id="@+id/tvDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_time_short"
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintTop_toBottomOf="@id/tvKm"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="4dp" />
+
+    <!-- Separador -->
+    <View
+        android:id="@+id/sep1"
+        android:layout_width="1dp"
+        android:layout_height="16dp"
+        android:background="@color/border"
+        app:layout_constraintTop_toTopOf="@id/tvDuration"
+        app:layout_constraintBottom_toBottomOf="@id/tvDuration"
+        app:layout_constraintStart_toEndOf="@id/tvDuration"
+        android:layout_marginHorizontal="12dp" />
+
+    <!-- Calorias -->
+    <TextView
+        android:id="@+id/tvCalories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_kcal"
+        android:textSize="14sp"
+        android:textColor="@color/orange"
+        app:layout_constraintTop_toTopOf="@id/tvDuration"
+        app:layout_constraintStart_toEndOf="@id/sep1" />
+
+    <!-- Flecha ver ruta -->
+    <TextView
+        android:id="@+id/tvViewRoute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_view_route"
+        android:textSize="11sp"
+        android:textColor="@color/volt"
+        android:textStyle="bold"
+        android:letterSpacing="0.1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

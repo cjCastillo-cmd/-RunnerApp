@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.gymnasioforce.runnerapp.ui.main.HomeFragment"
+        android:label="Inicio" />
+
+    <fragment
+        android:id="@+id/nav_stats"
+        android:name="com.gymnasioforce.runnerapp.ui.stats.StatsFragment"
+        android:label="Stats" />
+
+    <fragment
+        android:id="@+id/nav_friends"
+        android:name="com.gymnasioforce.runnerapp.ui.friends.FriendsFragment"
+        android:label="Social" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.gymnasioforce.runnerapp.ui.profile.ProfileFragment"
+        android:label="Perfil" />
+
+</navigation>
