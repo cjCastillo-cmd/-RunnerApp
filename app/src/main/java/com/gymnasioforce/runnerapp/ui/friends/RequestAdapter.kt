@@ -25,7 +25,7 @@ class RequestAdapter(
         val friend = requests[pos]
         val user = friend.user
         h.b.tvName.text = user?.name ?: "Usuario"
-        h.b.tvMessage.text = "quiere ser tu amigo"
+        h.b.tvMessage.text = h.b.root.context.getString(com.gymnasioforce.runnerapp.R.string.request_message)
 
         if (user?.photoUrl != null) {
             Glide.with(h.b.ivAvatar).load(user.photoUrl).circleCrop().into(h.b.ivAvatar)

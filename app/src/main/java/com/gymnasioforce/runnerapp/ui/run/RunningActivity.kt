@@ -87,7 +87,7 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
         val intent = Intent(this, RunningService::class.java).apply { action = RunningService.ACTION_START }
         startForegroundService(intent)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-        b.btnFinish.text = "FINALIZAR"
+        b.btnFinish.text = getString(R.string.btn_finish)
         b.btnCancel.visibility = View.GONE
         handler.post(uiUpdater)
     }
@@ -163,7 +163,11 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
         b.tvKcal.text = "${(km * 70).toInt()}"
 
         if (RunningService.routePoints.size > 1) {
-            val points = RunningService.routePoints.map { LatLng(it["lat"]!!, it["lng"]!!) }
+            val points = RunningService.routePoints.mapNotNull { m ->
+                val lat = m["lat"] ?: return@mapNotNull null
+                val lng = m["lng"] ?: return@mapNotNull null
+                LatLng(lat, lng)
+            }
             polyline?.remove()
             polyline = gMap?.addPolyline(PolylineOptions().addAll(points).color(0xFFC8FF00.toInt()).width(8f))
             gMap?.animateCamera(CameraUpdateFactory.newLatLng(points.last()))

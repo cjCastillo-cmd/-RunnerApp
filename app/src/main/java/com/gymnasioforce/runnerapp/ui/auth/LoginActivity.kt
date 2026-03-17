@@ -53,7 +53,10 @@ class LoginActivity : com.gymnasioforce.runnerapp.ui.BaseActivity() {
             try {
                 val resp = RetrofitClient.api.login(LoginRequest(email, password))
                 if (resp.isSuccessful && resp.body()?.success == true) {
-                    val auth = resp.body()!!.data!!
+                    val auth = resp.body()?.data ?: run {
+                        showToast("Error procesando respuesta")
+                        return@launch
+                    }
                     Prefs(this@LoginActivity).apply {
                         token = auth.token
                         userId = auth.user.id
