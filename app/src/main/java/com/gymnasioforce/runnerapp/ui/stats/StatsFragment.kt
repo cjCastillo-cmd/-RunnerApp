@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.FragmentStatsBinding
 import com.gymnasioforce.runnerapp.network.RetrofitClient
 import com.gymnasioforce.runnerapp.utils.showToast
@@ -47,7 +48,7 @@ class StatsFragment : Fragment() {
                     val sign = if (it.differenceKm >= 0) "+" else ""
                     b.tvMonthKmDiff.text = "${sign}%.1f km".format(it.differenceKm)
                 }
-            } catch (e: Exception) { showToast("Error cargando estadisticas") }
+            } catch (e: Exception) { showToast(getString(R.string.error_loading_stats)) }
         }
     }
 }

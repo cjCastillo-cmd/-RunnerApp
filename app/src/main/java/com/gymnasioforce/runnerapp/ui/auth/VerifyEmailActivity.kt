@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.EditText
 import com.gymnasioforce.runnerapp.ui.BaseActivity
 import androidx.lifecycle.lifecycleScope
+import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.ActivityVerifyEmailBinding
 import com.gymnasioforce.runnerapp.network.RetrofitClient
 import com.gymnasioforce.runnerapp.network.VerifyEmailRequest
@@ -55,7 +56,7 @@ class VerifyEmailActivity : BaseActivity() {
 
     private fun doVerify() {
         val code = getCode()
-        if (code.length != 6) { showToast("Ingresa el codigo de 6 digitos"); return }
+        if (code.length != 6) { showToast(getString(R.string.validation_enter_code)); return }
 
         setLoading(true)
         lifecycleScope.launch {
@@ -72,14 +73,14 @@ class VerifyEmailActivity : BaseActivity() {
                         userName = auth.user.name
                     }
                     RetrofitClient.setToken(auth.token)
-                    showToast("Cuenta verificada!")
+                    showToast(getString(R.string.success_verified))
                     startActivity(Intent(this@VerifyEmailActivity, MainActivity::class.java))
                     finishAffinity()
                 } else {
-                    showToast(resp.body()?.message ?: "Codigo incorrecto")
+                    showToast(resp.body()?.message ?: getString(R.string.error_wrong_code))
                 }
             } catch (e: Exception) {
-                showToast("Error: ${e.message}")
+                showToast(getString(R.string.error_connection))
             } finally { setLoading(false) }
         }
     }
@@ -88,8 +89,8 @@ class VerifyEmailActivity : BaseActivity() {
         lifecycleScope.launch {
             try {
                 RetrofitClient.api.resendCode(mapOf("email" to email))
-                showToast("Codigo reenviado a $email")
-            } catch (e: Exception) { showToast("Error: ${e.message}") }
+                showToast(getString(R.string.msg_code_resent, email))
+            } catch (e: Exception) { showToast(getString(R.string.error_connection)) }
         }
     }
 

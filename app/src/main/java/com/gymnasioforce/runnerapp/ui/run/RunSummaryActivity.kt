@@ -2,6 +2,7 @@ package com.gymnasioforce.runnerapp.ui.run
 
 import android.content.Intent
 import android.os.Bundle
+import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.ActivityRunSummaryBinding
 import com.gymnasioforce.runnerapp.ui.BaseActivity
 
@@ -42,12 +43,12 @@ class RunSummaryActivity : BaseActivity() {
 
     private fun shareRun(km: Double, sec: Int) {
         val duration = "%02d:%02d:%02d".format(sec / 3600, (sec % 3600) / 60, sec % 60)
-        val text = "Acabo de correr %.2f km en %s con Runner App!".format(km, duration)
+        val text = getString(R.string.msg_share_run).format(km, duration)
 
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, text)
         }
-        startActivity(Intent.createChooser(intent, "Compartir carrera"))
+        startActivity(Intent.createChooser(intent, getString(R.string.msg_share_chooser)))
     }
 }

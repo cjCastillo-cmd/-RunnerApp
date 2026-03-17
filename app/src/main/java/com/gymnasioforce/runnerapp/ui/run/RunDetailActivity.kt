@@ -96,7 +96,7 @@ class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
         gMap?.addPolyline(
             PolylineOptions()
                 .addAll(latLngs)
-                .color(0xFFC8FF00.toInt())
+                .color(getColor(R.color.volt))
                 .width(8f)
         )
 
@@ -112,13 +112,13 @@ class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
                 if (resp.isSuccessful) {
                     val dao = AppDatabase.getInstance(this@RunDetailActivity).runDao()
                     dao.getById(runId)?.let { dao.delete(it) }
-                    showToast("Carrera eliminada")
+                    showToast(getString(R.string.success_run_deleted))
                     finish()
                 } else {
-                    showToast("Error al eliminar")
+                    showToast(getString(R.string.error_deleting_run))
                 }
             } catch (e: Exception) {
-                showToast("Error: ${e.message}")
+                showToast(getString(R.string.error_connection))
             }
         }
     }

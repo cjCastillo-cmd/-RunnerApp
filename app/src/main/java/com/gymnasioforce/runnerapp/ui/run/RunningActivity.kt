@@ -104,7 +104,7 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
         val calories = (km * 70).toInt()
 
         if (km < 0.01) {
-            showToast("Recorrido muy corto")
+            showToast(getString(R.string.msg_short_run))
             stopService(Intent(this, RunningService::class.java))
             finish(); return
         }
@@ -144,10 +144,10 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
                         startActivity(summaryIntent)
                     }
                 } else {
-                    showToast("Error al guardar la carrera")
+                    showToast(getString(R.string.error_saving_run))
                 }
             } catch (e: Exception) {
-                showToast("Error: ${e.message}")
+                showToast(getString(R.string.error_connection))
             } finally {
                 stopService(Intent(this@RunningActivity, RunningService::class.java))
                 finish()
@@ -169,7 +169,7 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
                 LatLng(lat, lng)
             }
             polyline?.remove()
-            polyline = gMap?.addPolyline(PolylineOptions().addAll(points).color(0xFFC8FF00.toInt()).width(8f))
+            polyline = gMap?.addPolyline(PolylineOptions().addAll(points).color(getColor(R.color.volt)).width(8f))
             gMap?.animateCamera(CameraUpdateFactory.newLatLng(points.last()))
         }
     }
@@ -177,7 +177,7 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 100 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) startRun()
-        else showToast("Se requieren permisos de ubicacion")
+        else showToast(getString(R.string.error_permissions_location))
     }
 
     override fun onDestroy() {

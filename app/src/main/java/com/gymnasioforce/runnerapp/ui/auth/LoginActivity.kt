@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.ActivityLoginBinding
 import com.gymnasioforce.runnerapp.network.LoginRequest
 import com.gymnasioforce.runnerapp.network.RetrofitClient
@@ -44,8 +45,8 @@ class LoginActivity : com.gymnasioforce.runnerapp.ui.BaseActivity() {
         val password = b.etPassword.text.toString()
 
         var hasError = false
-        if (email.isEmpty()) { b.tilEmail.error = "Ingresa tu email"; hasError = true }
-        if (password.isEmpty()) { b.tilPassword.error = "Ingresa tu contrasena"; hasError = true }
+        if (email.isEmpty()) { b.tilEmail.error = getString(R.string.validation_enter_email); hasError = true }
+        if (password.isEmpty()) { b.tilPassword.error = getString(R.string.validation_enter_password); hasError = true }
         if (hasError) return
 
         setLoading(true)
@@ -65,10 +66,10 @@ class LoginActivity : com.gymnasioforce.runnerapp.ui.BaseActivity() {
                     RetrofitClient.setToken(auth.token)
                     goToMain()
                 } else {
-                    showToast(resp.body()?.message ?: "Credenciales incorrectas")
+                    showToast(resp.body()?.message ?: getString(R.string.error_wrong_credentials))
                 }
             } catch (e: Exception) {
-                showToast("Error de conexion: ${e.message}")
+                showToast(getString(R.string.error_connection))
             } finally { setLoading(false) }
         }
     }

@@ -5,6 +5,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.FragmentFriendsBinding
 import com.gymnasioforce.runnerapp.network.FriendRequest
 import com.gymnasioforce.runnerapp.network.FriendResponse
@@ -29,8 +30,8 @@ class FriendsFragment : Fragment() {
         b.rvDiscover.layoutManager = LinearLayoutManager(requireContext())
         b.rvRequests.layoutManager = LinearLayoutManager(requireContext())
 
-        b.swipeRefresh.setColorSchemeColors(0xFFC8FF00.toInt())
-        b.swipeRefresh.setProgressBackgroundColorSchemeColor(0xFF141414.toInt())
+        b.swipeRefresh.setColorSchemeColors(requireContext().getColor(R.color.volt))
+        b.swipeRefresh.setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.surface))
         b.swipeRefresh.setOnRefreshListener { loadAll() }
 
         loadAll()
@@ -90,7 +91,7 @@ class FriendsFragment : Fragment() {
             try {
                 val resp = RetrofitClient.api.respondFriendRequest(FriendResponse(requestId, action))
                 if (resp.isSuccessful) {
-                    val msg = if (action == "accept") "Solicitud aceptada" else "Solicitud rechazada"
+                    val msg = if (action == "accept") getString(R.string.success_request_accepted) else getString(R.string.success_request_rejected)
                     showToast(msg)
                     loadPendingRequests()
                     if (action == "accept") {
@@ -98,7 +99,7 @@ class FriendsFragment : Fragment() {
                         loadLeaderboard()
                     }
                 }
-            } catch (e: Exception) { showToast("Error: ${e.message}") }
+            } catch (e: Exception) { showToast(getString(R.string.error_connection)) }
         }
     }
 
@@ -109,7 +110,7 @@ class FriendsFragment : Fragment() {
                 val users = friends.mapNotNull { it.friend }
                 b.rvFriends.adapter = UserListAdapter(users, showAddBtn = false)
                 b.tvEmptyFriends.visibility = if (users.isEmpty()) View.VISIBLE else View.GONE
-            } catch (e: Exception) { showToast("Error cargando amigos") }
+            } catch (e: Exception) { showToast(getString(R.string.error_loading_friends)) }
         }
     }
 
@@ -121,7 +122,7 @@ class FriendsFragment : Fragment() {
                     sendFriendRequest(user)
                 }
                 b.tvEmptyDiscover.visibility = if (users.isEmpty()) View.VISIBLE else View.GONE
-            } catch (e: Exception) { showToast("Error cargando usuarios") }
+            } catch (e: Exception) { showToast(getString(R.string.error_loading_users)) }
         }
     }
 
@@ -129,9 +130,9 @@ class FriendsFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val resp = RetrofitClient.api.sendFriendRequest(FriendRequest(user.id))
-                if (resp.isSuccessful) showToast("Solicitud enviada a ${user.name}")
-                else showToast("No se pudo enviar la solicitud")
-            } catch (e: Exception) { showToast("Error: ${e.message}") }
+                if (resp.isSuccessful) showToast(getString(R.string.success_request_sent, user.name))
+                else showToast(getString(R.string.error_send_request))
+            } catch (e: Exception) { showToast(getString(R.string.error_connection)) }
         }
     }
 }

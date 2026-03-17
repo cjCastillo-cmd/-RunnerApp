@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.FragmentProfileBinding
 import com.gymnasioforce.runnerapp.network.RetrofitClient
 import com.gymnasioforce.runnerapp.ui.auth.LoginActivity
@@ -66,25 +67,25 @@ class ProfileFragment : Fragment() {
                         b.ivAvatar.setImageDrawable(AvatarHelper.generateInitials(requireContext(), user.name, 100))
                     }
                 }
-            } catch (e: Exception) { showToast("Error cargando perfil") }
+            } catch (e: Exception) { showToast(getString(R.string.error_loading_profile)) }
         }
     }
 
     private fun saveProfile() {
         val name = b.etEditName.text.toString().trim()
         val country = b.actvEditCountry.text.toString().trim()
-        if (name.isEmpty() || country.isEmpty()) { showToast("Completa los campos"); return }
+        if (name.isEmpty() || country.isEmpty()) { showToast(getString(R.string.validation_complete_fields)); return }
 
         lifecycleScope.launch {
             try {
                 val resp = RetrofitClient.api.updateProfile(mapOf("name" to name, "country" to country))
                 if (resp.isSuccessful) {
-                    showToast("Perfil actualizado")
+                    showToast(getString(R.string.success_profile_updated))
                     Prefs(requireContext()).userName = name
                     b.tvName.text = name.uppercase()
                     b.tvCountry.text = country
-                } else showToast("Error al guardar")
-            } catch (e: Exception) { showToast("Error: ${e.message}") }
+                } else showToast(getString(R.string.error_saving_profile))
+            } catch (e: Exception) { showToast(getString(R.string.error_connection)) }
         }
     }
 
@@ -102,9 +103,9 @@ class ProfileFragment : Fragment() {
                 val url = resp.body()?.data?.get("photo_url")
                 url?.let {
                     Glide.with(this@ProfileFragment).load(it).circleCrop().into(b.ivAvatar)
-                    showToast("Foto actualizada")
+                    showToast(getString(R.string.success_photo_updated))
                 }
-            } catch (e: Exception) { showToast("Error subiendo foto: ${e.message}") }
+            } catch (e: Exception) { showToast(getString(R.string.error_uploading_photo)) }
         }
     }
 

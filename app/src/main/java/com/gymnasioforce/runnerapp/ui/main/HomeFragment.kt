@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gymnasioforce.runnerapp.data.local.AppDatabase
 import com.gymnasioforce.runnerapp.data.local.RunEntity
+import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.FragmentHomeBinding
 import com.gymnasioforce.runnerapp.network.RetrofitClient
 import com.gymnasioforce.runnerapp.network.Run
@@ -39,8 +40,8 @@ class HomeFragment : Fragment() {
         loadStats()
         loadRecentRuns()
 
-        b.swipeRefresh.setColorSchemeColors(0xFFC8FF00.toInt())
-        b.swipeRefresh.setProgressBackgroundColorSchemeColor(0xFF141414.toInt())
+        b.swipeRefresh.setColorSchemeColors(requireContext().getColor(R.color.volt))
+        b.swipeRefresh.setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.surface))
         b.swipeRefresh.setOnRefreshListener {
             loadStats()
             loadRecentRuns()
@@ -65,7 +66,7 @@ class HomeFragment : Fragment() {
                     b.tvAvgPace.text = if (p > 0) "${p.toInt()}:${"%02d".format(((p % 1) * 60).toInt())}" else "-"
                 }
             } catch (e: Exception) {
-                showToast("Error cargando datos")
+                showToast(getString(R.string.error_loading_data))
             }
         }
     }

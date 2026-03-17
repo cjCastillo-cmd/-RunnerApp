@@ -61,7 +61,7 @@ class RunningService : Service() {
         lastMilestoneKm = 0
         routePoints.clear()
 
-        startForeground(1, buildNotification("Carrera iniciada – 0.00 km"))
+        startForeground(1, buildNotification(getString(R.string.notif_run_started)))
         startLocationUpdates()
         startTimer()
     }
@@ -110,7 +110,7 @@ class RunningService : Service() {
             lastLocation = location
 
             val km = totalDistance / 1000.0
-            updateNotification("Corriendo – %.2f km".format(km))
+            updateNotification(getString(R.string.notif_running).format(km))
 
             // Notificacion por cada km completado
             val currentKm = km.toInt()
@@ -125,8 +125,8 @@ class RunningService : Service() {
     private fun notifyMilestone(km: Int) {
         val nm = getSystemService(NotificationManager::class.java)
         val notification = NotificationCompat.Builder(this, MILESTONE_CH_ID)
-            .setContentTitle("$km KM completado!")
-            .setContentText("Sigue asi! Llevas $km km recorridos")
+            .setContentTitle(getString(R.string.notif_milestone_title, km))
+            .setContentText(getString(R.string.notif_milestone_text, km))
             .setSmallIcon(R.drawable.ic_run)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -152,7 +152,7 @@ class RunningService : Service() {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                CHANNEL_ID, "Carrera activa", NotificationManager.IMPORTANCE_LOW
+                CHANNEL_ID, getString(R.string.notif_channel_running), NotificationManager.IMPORTANCE_LOW
             )
             getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
         }
@@ -161,9 +161,9 @@ class RunningService : Service() {
     private fun createMilestoneChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                MILESTONE_CH_ID, "Kilometros completados", NotificationManager.IMPORTANCE_HIGH
+                MILESTONE_CH_ID, getString(R.string.notif_channel_milestone), NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Notificacion al completar cada kilometro"
+                description = getString(R.string.notif_channel_milestone_desc)
                 enableVibration(true)
             }
             getSystemService(NotificationManager::class.java).createNotificationChannel(channel)

@@ -113,6 +113,59 @@
     <string name="btn_reject">X</string>
     <string name="request_message">quiere ser tu amigo</string>
 
+    <!-- Validaciones -->
+    <string name="validation_enter_email">Ingresa tu email</string>
+    <string name="validation_enter_password">Ingresa tu contrasena</string>
+    <string name="validation_enter_name">Ingresa tu nombre</string>
+    <string name="validation_select_country">Selecciona tu pais</string>
+    <string name="validation_min_password">Minimo 6 caracteres</string>
+    <string name="validation_passwords_mismatch">Las contrasenas no coinciden</string>
+    <string name="validation_enter_code">Ingresa el codigo de 6 digitos</string>
+    <string name="validation_complete_fields">Completa los campos</string>
+
+    <!-- Errores -->
+    <string name="error_connection">Error de conexion</string>
+    <string name="error_processing_response">Error procesando respuesta</string>
+    <string name="error_wrong_credentials">Credenciales incorrectas</string>
+    <string name="error_wrong_code">Codigo incorrecto</string>
+    <string name="error_email_not_found">Correo no registrado</string>
+    <string name="error_loading_data">Error cargando datos</string>
+    <string name="error_loading_stats">Error cargando estadisticas</string>
+    <string name="error_loading_profile">Error cargando perfil</string>
+    <string name="error_loading_friends">Error cargando amigos</string>
+    <string name="error_loading_users">Error cargando usuarios</string>
+    <string name="error_saving_profile">Error al guardar</string>
+    <string name="error_saving_run">Error al guardar la carrera</string>
+    <string name="error_deleting_run">Error al eliminar</string>
+    <string name="error_uploading_photo">Error subiendo foto</string>
+    <string name="error_send_request">No se pudo enviar la solicitud</string>
+    <string name="error_generic">Error: %1$s</string>
+    <string name="error_permissions_location">Se requieren permisos de ubicacion</string>
+
+    <!-- Exitos -->
+    <string name="success_register">Registro exitoso! Revisa tu correo.</string>
+    <string name="success_verified">Cuenta verificada!</string>
+    <string name="success_token_sent">Token enviado a tu correo. Revisa tus logs.</string>
+    <string name="success_profile_updated">Perfil actualizado</string>
+    <string name="success_photo_updated">Foto actualizada</string>
+    <string name="success_run_deleted">Carrera eliminada</string>
+    <string name="success_request_accepted">Solicitud aceptada</string>
+    <string name="success_request_rejected">Solicitud rechazada</string>
+    <string name="success_request_sent">Solicitud enviada a %1$s</string>
+
+    <!-- Running / Notificaciones -->
+    <string name="msg_short_run">Recorrido muy corto</string>
+    <string name="msg_code_resent">Codigo reenviado a %1$s</string>
+    <string name="msg_share_run">Acabo de correr %.2f km en %s con Runner App!</string>
+    <string name="msg_share_chooser">Compartir carrera</string>
+    <string name="notif_run_started">Carrera iniciada – 0.00 km</string>
+    <string name="notif_running">Corriendo – %.2f km</string>
+    <string name="notif_milestone_title">%1$d KM completado!</string>
+    <string name="notif_milestone_text">Sigue asi! Llevas %1$d km recorridos</string>
+    <string name="notif_channel_running">Carrera activa</string>
+    <string name="notif_channel_milestone">Kilometros completados</string>
+    <string name="notif_channel_milestone_desc">Notificacion al completar cada kilometro</string>
+
     <!-- Accesibilidad -->
     <string name="cd_user_avatar">Avatar del usuario</string>
 

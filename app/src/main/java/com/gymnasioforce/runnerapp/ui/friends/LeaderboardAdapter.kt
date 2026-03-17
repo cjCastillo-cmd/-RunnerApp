@@ -26,7 +26,7 @@ class LeaderboardAdapter(
         h.b.tvKm.text = "%.1f".format(entry.kmThisMonth)
 
         if (entry.isMe) {
-            h.b.tvPosition.setTextColor(0xFFC8FF00.toInt())
+            h.b.tvPosition.setTextColor(h.b.root.context.getColor(com.gymnasioforce.runnerapp.R.color.volt))
         }
 
         entry.photoUrl?.let {

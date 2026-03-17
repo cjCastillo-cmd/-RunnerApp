@@ -50,12 +50,12 @@ class RegisterActivity : BaseActivity() {
         val country = b.actvPais.text.toString().trim()
 
         var hasError = false
-        if (name.isEmpty()) { b.tilNombre.error = "Ingresa tu nombre"; hasError = true }
-        if (email.isEmpty()) { b.tilEmail.error = "Ingresa tu email"; hasError = true }
-        if (country.isEmpty()) { b.tilPais.error = "Selecciona tu pais"; hasError = true }
-        if (pass.isEmpty()) { b.tilPassword.error = "Ingresa una contrasena"; hasError = true }
-        else if (pass.length < 6) { b.tilPassword.error = "Minimo 6 caracteres"; hasError = true }
-        if (confirm != pass) { b.tilConfirmPassword.error = "Las contrasenas no coinciden"; hasError = true }
+        if (name.isEmpty()) { b.tilNombre.error = getString(R.string.validation_enter_name); hasError = true }
+        if (email.isEmpty()) { b.tilEmail.error = getString(R.string.validation_enter_email); hasError = true }
+        if (country.isEmpty()) { b.tilPais.error = getString(R.string.validation_select_country); hasError = true }
+        if (pass.isEmpty()) { b.tilPassword.error = getString(R.string.validation_enter_password); hasError = true }
+        else if (pass.length < 6) { b.tilPassword.error = getString(R.string.validation_min_password); hasError = true }
+        if (confirm != pass) { b.tilConfirmPassword.error = getString(R.string.validation_passwords_mismatch); hasError = true }
         if (hasError) return
 
         setLoading(true)
@@ -65,7 +65,7 @@ class RegisterActivity : BaseActivity() {
                     RegisterRequest(name, email, pass, confirm, country)
                 )
                 if (resp.isSuccessful && resp.body()?.success == true) {
-                    showToast("Registro exitoso! Revisa tu correo.")
+                    showToast(getString(R.string.success_register))
                     val intent = Intent(this@RegisterActivity, VerifyEmailActivity::class.java)
                     intent.putExtra("email", email)
                     startActivity(intent)
@@ -74,7 +74,7 @@ class RegisterActivity : BaseActivity() {
                     showToast(resp.body()?.message ?: "Error al registrarse")
                 }
             } catch (e: Exception) {
-                showToast("Error de conexion: ${e.message}")
+                showToast(getString(R.string.error_connection))
             } finally { setLoading(false) }
         }
     }
