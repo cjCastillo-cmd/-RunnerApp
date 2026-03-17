@@ -1,0 +1,254 @@
+<resources>
+    <string name="app_name">RunnerApp</string>
+
+    <!-- Branding -->
+    <string name="app_title_runner">RUNNER</string>
+    <string name="app_title_app">APP</string>
+    <string name="tagline">RUN. MEASURE. OVERCOME.</string>
+
+    <!-- Auth -->
+    <string name="hint_email">EMAIL</string>
+    <string name="hint_password">PASSWORD</string>
+    <string name="hint_confirm_password">CONFIRM PASSWORD</string>
+    <string name="hint_name">NAME</string>
+    <string name="hint_country">COUNTRY</string>
+    <string name="btn_login">LOG IN</string>
+    <string name="no_account_prompt">Don\'t have an account? </string>
+    <string name="btn_create_account">Create account</string>
+    <string name="title_create_account">CREATE\nACCOUNT</string>
+    <string name="btn_register">CREATE ACCOUNT</string>
+    <string name="has_account_prompt">Already have an account? </string>
+    <string name="btn_go_login">Log in</string>
+
+    <!-- Verify email -->
+    <string name="title_verify_email">VERIFY\nEMAIL</string>
+    <string name="verify_email_description">Enter the 6-digit code we sent to your email</string>
+    <string name="placeholder_email">user@email.com</string>
+    <string name="btn_verify">VERIFY</string>
+    <string name="btn_resend_code">Resend code</string>
+    <string name="resend_timer">Resend in 60s</string>
+
+    <!-- Recover account -->
+    <string name="title_recover_account">RECOVER\nACCOUNT</string>
+    <string name="recover_description">Enter your email to receive a reset token</string>
+    <string name="btn_send_token">SEND TOKEN</string>
+    <string name="btn_back_to_login">Back to login</string>
+
+    <!-- Common labels -->
+    <string name="label_time">TIME</string>
+    <string name="label_km">KM</string>
+    <string name="label_km_suffix">" KM"</string>
+    <string name="label_km_lower">" km"</string>
+    <string name="label_kcal">KCAL</string>
+    <string name="label_min_km">MIN/KM</string>
+    <string name="label_distance">DISTANCE</string>
+    <string name="label_total_distance">TOTAL DISTANCE</string>
+    <string name="label_runs">RUNS</string>
+    <string name="label_runs_count">RUNS</string>
+    <string name="label_calories">CALORIES</string>
+    <string name="label_km_total">TOTAL KM</string>
+    <string name="label_kilometers">KILOMETERS</string>
+    <string name="label_avg_pace">AVG PACE</string>
+
+    <!-- Defaults / placeholders -->
+    <string name="default_zero">0</string>
+    <string name="default_zero_decimal">0.0</string>
+    <string name="default_km">0.00</string>
+    <string name="default_time_short">00:00</string>
+    <string name="default_duration">00:00:00</string>
+    <string name="default_pace">0:00</string>
+    <string name="default_date">Mar 16 2026</string>
+    <string name="default_kcal">0 kcal</string>
+    <string name="default_km_distance">0.0 km</string>
+    <string name="default_diff_km">+0.0 km</string>
+    <string name="default_diff_zero">+0</string>
+    <string name="default_diff_kcal">+0 kcal</string>
+    <string name="default_diff_pace">-0:00</string>
+    <string name="placeholder_position">1</string>
+    <string name="placeholder_name">Name</string>
+    <string name="placeholder_country">Country</string>
+
+    <!-- Running -->
+    <string name="btn_cancel">CANCEL</string>
+    <string name="btn_finish">FINISH</string>
+    <string name="btn_start">START</string>
+    <string name="cd_start_run">Start run</string>
+
+    <!-- Run detail / summary -->
+    <string name="btn_delete_run">DELETE RUN</string>
+    <string name="title_run_completed">RUN COMPLETED</string>
+    <string name="btn_share">SHARE</string>
+    <string name="btn_close">CLOSE</string>
+    <string name="btn_view_route">VIEW ROUTE</string>
+
+    <!-- Home -->
+    <string name="greeting_default">GOOD MORNING</string>
+    <string name="default_runner_name">RUNNER</string>
+    <string name="label_recent_runs">RECENT RUNS</string>
+    <string name="empty_runs_message">No runs yet.\nPress START to begin!</string>
+
+    <!-- Profile -->
+    <string name="label_edit_profile">EDIT PROFILE</string>
+    <string name="btn_save_changes">SAVE CHANGES</string>
+    <string name="btn_logout">LOG OUT</string>
+
+    <!-- Stats -->
+    <string name="title_your_stats">YOUR STATS</string>
+    <string name="label_this_week">THIS WEEK</string>
+    <string name="label_this_month">THIS MONTH</string>
+    <string name="empty_stats_message">Complete your first run to see statistics</string>
+
+    <!-- Social / Friends -->
+    <string name="title_social">SOCIAL</string>
+    <string name="label_monthly_ranking">MONTHLY RANKING</string>
+    <string name="empty_leaderboard">Add friends to see the ranking</string>
+    <string name="label_pending_requests">PENDING REQUESTS</string>
+    <string name="empty_requests">No pending requests</string>
+    <string name="label_my_friends">MY FRIENDS</string>
+    <string name="empty_friends">No friends yet. Discover runners below!</string>
+    <string name="label_discover">DISCOVER</string>
+    <string name="empty_discover">No new runners for now</string>
+    <string name="btn_add">ADD</string>
+    <string name="btn_accept">ACCEPT</string>
+    <string name="btn_reject">X</string>
+    <string name="request_message">wants to be your friend</string>
+
+    <!-- Validations -->
+    <string name="validation_enter_email">Enter your email</string>
+    <string name="validation_enter_password">Enter your password</string>
+    <string name="validation_enter_name">Enter your name</string>
+    <string name="validation_select_country">Select your country</string>
+    <string name="validation_min_password">Minimum 6 characters</string>
+    <string name="validation_passwords_mismatch">Passwords don\'t match</string>
+    <string name="validation_enter_code">Enter the 6-digit code</string>
+    <string name="validation_complete_fields">Complete all fields</string>
+
+    <!-- Errors -->
+    <string name="error_connection">Connection error</string>
+    <string name="error_wrong_credentials">Wrong credentials</string>
+    <string name="error_wrong_code">Wrong code</string>
+    <string name="error_email_not_found">Email not registered</string>
+    <string name="error_loading_data">Error loading data</string>
+    <string name="error_loading_stats">Error loading statistics</string>
+    <string name="error_loading_profile">Error loading profile</string>
+    <string name="error_loading_friends">Error loading friends</string>
+    <string name="error_loading_users">Error loading users</string>
+    <string name="error_saving_profile">Error saving</string>
+    <string name="error_saving_run">Error saving run</string>
+    <string name="error_deleting_run">Error deleting</string>
+    <string name="error_uploading_photo">Error uploading photo</string>
+    <string name="error_send_request">Could not send request</string>
+    <string name="error_permissions_location">Location permissions required</string>
+
+    <!-- Success -->
+    <string name="success_register">Registration successful! Check your email.</string>
+    <string name="success_verified">Account verified!</string>
+    <string name="success_token_sent">Token sent to your email. Check your logs.</string>
+    <string name="success_profile_updated">Profile updated</string>
+    <string name="success_photo_updated">Photo updated</string>
+    <string name="success_run_deleted">Run deleted</string>
+    <string name="success_request_accepted">Request accepted</string>
+    <string name="success_request_rejected">Request rejected</string>
+    <string name="success_request_sent">Request sent to %1$s</string>
+
+    <!-- Running / Notifications -->
+    <string name="msg_short_run">Run too short</string>
+    <string name="msg_code_resent">Code resent to %1$s</string>
+    <string name="msg_share_run">Just ran %.2f km in %s with Runner App!</string>
+    <string name="msg_share_chooser">Share run</string>
+    <string name="notif_run_started">Run started – 0.00 km</string>
+    <string name="notif_running">Running – %.2f km</string>
+    <string name="notif_milestone_title">%1$d KM completed!</string>
+    <string name="notif_milestone_text">Keep going! You\'ve covered %1$d km</string>
+    <string name="notif_channel_running">Active run</string>
+    <string name="notif_channel_milestone">Completed kilometers</string>
+    <string name="notif_channel_milestone_desc">Notification when completing each kilometer</string>
+
+    <!-- Achievements -->
+    <string name="title_achievements">ACHIEVEMENTS</string>
+    <string name="achievement_first_km">First Kilometer</string>
+    <string name="achievement_first_km_desc">Run your first kilometer</string>
+    <string name="achievement_10km">10K Runner</string>
+    <string name="achievement_10km_desc">Accumulate 10 km total</string>
+    <string name="achievement_marathon">Marathoner</string>
+    <string name="achievement_marathon_desc">Accumulate 42.195 km (a marathon)</string>
+    <string name="achievement_100km">Centurion</string>
+    <string name="achievement_100km_desc">Accumulate 100 km total</string>
+    <string name="achievement_500km">Ultrarunner</string>
+    <string name="achievement_500km_desc">Accumulate 500 km total</string>
+    <string name="achievement_first_run">First Run</string>
+    <string name="achievement_first_run_desc">Complete your first run</string>
+    <string name="achievement_10_runs">Consistent</string>
+    <string name="achievement_10_runs_desc">Complete 10 runs</string>
+    <string name="achievement_50_runs">Dedicated</string>
+    <string name="achievement_50_runs_desc">Complete 50 runs</string>
+    <string name="achievement_100_runs">Unstoppable</string>
+    <string name="achievement_100_runs_desc">Complete 100 runs</string>
+    <string name="achievement_1000cal">Calorie Burner</string>
+    <string name="achievement_1000cal_desc">Burn 1,000 calories</string>
+    <string name="achievement_10000cal">Human Furnace</string>
+    <string name="achievement_10000cal_desc">Burn 10,000 calories</string>
+    <string name="achievements_unlocked">%1$d / %2$d unlocked</string>
+
+    <!-- Accessibility -->
+    <string name="cd_user_avatar">User avatar</string>
+    <string name="hint_verification_digit">Digit</string>
+    <string name="cd_back">Back</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_stats">Stats</string>
+    <string name="nav_social">Social</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Theme -->
+    <string name="label_theme">APPEARANCE</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System</string>
+
+    <!-- Delete account -->
+    <string name="btn_delete_account">Delete account</string>
+    <string name="delete_account_title">Delete account</string>
+    <string name="delete_account_message">This action is irreversible. All your runs, friends, and data will be deleted. Are you sure?</string>
+    <string name="btn_confirm_delete">Delete</string>
+    <string name="success_account_deleted">Account deleted</string>
+    <string name="error_deleting_account">Error deleting account</string>
+
+    <!-- Charts -->
+    <string name="weekly_distance">WEEKLY DISTANCE</string>
+    <string name="monthly_progress">MONTHLY PROGRESS</string>
+
+    <!-- Push notifications -->
+    <string name="notif_channel_social">Social notifications</string>
+
+    <!-- Run photo -->
+    <string name="btn_add_photo">ADD PHOTO</string>
+    <string name="label_run_photo">Run photo</string>
+
+    <!-- Countries -->
+    <string-array name="countries">
+        <item>Argentina</item>
+        <item>Bolivia</item>
+        <item>Brazil</item>
+        <item>Chile</item>
+        <item>Colombia</item>
+        <item>Costa Rica</item>
+        <item>Cuba</item>
+        <item>Ecuador</item>
+        <item>El Salvador</item>
+        <item>Spain</item>
+        <item>United States</item>
+        <item>Guatemala</item>
+        <item>Honduras</item>
+        <item>Mexico</item>
+        <item>Nicaragua</item>
+        <item>Panama</item>
+        <item>Paraguay</item>
+        <item>Peru</item>
+        <item>Puerto Rico</item>
+        <item>Dominican Republic</item>
+        <item>Uruguay</item>
+        <item>Venezuela</item>
+    </string-array>
+</resources>

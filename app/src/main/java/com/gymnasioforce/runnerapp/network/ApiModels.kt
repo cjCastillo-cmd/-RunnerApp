@@ -32,7 +32,8 @@ data class Run(
     @SerializedName("end_lng") val endLng: Double,
     @SerializedName("avg_pace") val avgPace: Double?,
     @SerializedName("route_json") val routeJson: String?,
-    @SerializedName("created_at") val createdAt: String
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("photo_url") val photoUrl: String? = null
 )
 
 data class SaveRunRequest(
@@ -80,4 +81,17 @@ data class LeaderboardEntry(
     val name: String, @SerializedName("photo_url") val photoUrl: String?,
     val country: String, @SerializedName("km_this_month") val kmThisMonth: Double,
     @SerializedName("is_me") val isMe: Boolean
+)
+
+data class DailyChartData(
+    @SerializedName("date") val date: String,
+    @SerializedName("km") val km: Double,
+    @SerializedName("runs") val runs: Int
+)
+
+data class MonthlyChartData(
+    @SerializedName("month") val month: String,
+    @SerializedName("km") val km: Double,
+    @SerializedName("runs") val runs: Int,
+    @SerializedName("calories") val calories: Int
 )

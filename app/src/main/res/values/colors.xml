@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Fondos -->
-    <color name="background">#FF0D1117</color>
-    <color name="surface">#FF161B22</color>
-    <color name="border">#FF30363D</color>
+    <!-- Fondos (claro) -->
+    <color name="background">#FFFAFBFC</color>
+    <color name="surface">#FFFFFFFF</color>
+    <color name="border">#FFE1E4E8</color>
 
     <!-- Texto -->
-    <color name="text_primary">#FFE6EDF3</color>
-    <color name="text_secondary">#FF8B949E</color>
-    <color name="text_tertiary">#FF484F58</color>
+    <color name="text_primary">#FF1F2328</color>
+    <color name="text_secondary">#FF656D76</color>
+    <color name="text_tertiary">#FF8C959F</color>
 
     <!-- Acento principal -->
-    <color name="accent">#FF4D8AFF</color>
+    <color name="accent">#FF2563EB</color>
     <color name="accent_on">#FFFFFFFF</color>
 
     <!-- Acentos semanticos -->
-    <color name="green">#FF3FB950</color>
-    <color name="amber">#FFD29922</color>
-    <color name="cyan">#FF39D2C0</color>
-    <color name="red">#FFF85149</color>
+    <color name="green">#FF1A7F37</color>
+    <color name="amber">#FF9A6700</color>
+    <color name="cyan">#FF0969DA</color>
+    <color name="red">#FFCF222E</color>
 
     <!-- Acento con transparencia para glows -->
-    <color name="accent_20">#334D8AFF</color>
-    <color name="accent_40">#664D8AFF</color>
+    <color name="accent_20">#332563EB</color>
+    <color name="accent_40">#662563EB</color>
 
-    <!-- Compatibilidad (aliases usados en codigo Kotlin) -->
+    <!-- Compatibilidad -->
     <color name="white">#FFFFFFFF</color>
     <color name="volt">@color/accent</color>
     <color name="orange">@color/amber</color>

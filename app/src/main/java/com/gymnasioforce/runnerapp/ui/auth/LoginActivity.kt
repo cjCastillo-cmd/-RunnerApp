@@ -12,6 +12,7 @@ import com.gymnasioforce.runnerapp.ui.main.MainActivity
 import com.gymnasioforce.runnerapp.utils.Prefs
 import com.gymnasioforce.runnerapp.utils.showToast
 import kotlinx.coroutines.launch
+import androidx.appcompat.app.AppCompatDelegate
 
 class LoginActivity : com.gymnasioforce.runnerapp.ui.BaseActivity() {
 
@@ -21,6 +22,9 @@ class LoginActivity : com.gymnasioforce.runnerapp.ui.BaseActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(b.root)
+
+        // Aplicar tema guardado
+        AppCompatDelegate.setDefaultNightMode(Prefs(this).themeMode)
 
         if (Prefs(this).token.isNotEmpty()) {
             RetrofitClient.setToken(Prefs(this).token)

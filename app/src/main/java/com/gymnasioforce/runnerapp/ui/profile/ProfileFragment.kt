@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.data.AchievementCalculator
 import com.gymnasioforce.runnerapp.databinding.FragmentProfileBinding
@@ -18,7 +20,6 @@ import com.gymnasioforce.runnerapp.ui.auth.LoginActivity
 import com.gymnasioforce.runnerapp.utils.AvatarHelper
 import com.gymnasioforce.runnerapp.utils.Prefs
 import com.gymnasioforce.runnerapp.utils.showToast
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -27,6 +28,7 @@ import java.io.File
 class ProfileFragment : Fragment() {
 
     private lateinit var b: FragmentProfileBinding
+    private val viewModel: ProfileViewModel by viewModels()
 
     private val pickPhoto = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { uploadPhoto(it) }
@@ -40,45 +42,98 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, state: Bundle?) {
         super.onViewCreated(view, state)
         setupCountryDropdown()
+        setupThemeToggle()
         b.rvAchievements.layoutManager = LinearLayoutManager(requireContext())
-        loadProfile()
+
         b.ivAvatar.setOnClickListener { pickPhoto.launch("image/*") }
         b.btnSave.setOnClickListener { saveProfile() }
         b.btnLogout.setOnClickListener { doLogout() }
+        b.btnDeleteAccount.setOnClickListener { confirmDeleteAccount() }
+
+        observeViewModel()
+        viewModel.loadProfile()
+    }
+
+    private fun observeViewModel() {
+        viewModel.user.observe(viewLifecycleOwner) { user ->
+            user ?: return@observe
+            b.etEditName.setText(user.name)
+            b.actvEditCountry.setText(user.country)
+            b.tvName.text = user.name.uppercase()
+            b.tvCountry.text = user.country
+            b.tvStatKm.text = "%.1f".format(user.totalKm)
+            b.tvStatKcal.text = "${user.totalCalories}"
+        }
+
+        viewModel.totalRuns.observe(viewLifecycleOwner) { runs ->
+            b.tvStatRuns.text = "$runs"
+            val user = viewModel.user.value ?: return@observe
+            loadAchievements(runs, user.totalKm, user.totalCalories)
+        }
+
+        viewModel.photoUrl.observe(viewLifecycleOwner) { url ->
+            if (url != null) {
+                Glide.with(this).load(url).circleCrop().into(b.ivAvatar)
+            } else {
+                val name = viewModel.user.value?.name ?: ""
+                b.ivAvatar.setImageDrawable(AvatarHelper.generateInitials(requireContext(), name, 100))
+            }
+        }
+
+        viewModel.message.observe(viewLifecycleOwner) { msg ->
+            msg ?: return@observe
+            when (msg) {
+                "saved" -> {
+                    showToast(getString(R.string.success_profile_updated))
+                    val user = viewModel.user.value
+                    user?.let {
+                        Prefs(requireContext()).userName = it.name
+                        b.tvName.text = it.name.uppercase()
+                        b.tvCountry.text = it.country
+                    }
+                }
+                "photo_ok" -> showToast(getString(R.string.success_photo_updated))
+                "error_profile" -> showToast(getString(R.string.error_loading_profile))
+                "error_save" -> showToast(getString(R.string.error_saving_profile))
+                "error_photo" -> showToast(getString(R.string.error_uploading_photo))
+                "error_delete" -> showToast(getString(R.string.error_deleting_account))
+            }
+            viewModel.clearMessage()
+        }
+
+        viewModel.accountDeleted.observe(viewLifecycleOwner) { deleted ->
+            if (deleted) {
+                Prefs(requireContext()).clear()
+                RetrofitClient.clearToken()
+                startActivity(Intent(requireContext(), LoginActivity::class.java))
+                requireActivity().finishAffinity()
+            }
+        }
     }
 
     private fun setupCountryDropdown() {
-        val countries = resources.getStringArray(com.gymnasioforce.runnerapp.R.array.countries)
+        val countries = resources.getStringArray(R.array.countries)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, countries)
         b.actvEditCountry.setAdapter(adapter)
     }
 
-    private fun loadProfile() {
-        lifecycleScope.launch {
-            try {
-                val resp = RetrofitClient.api.getProfile()
-                resp.body()?.data?.let { user ->
-                    b.etEditName.setText(user.name)
-                    b.actvEditCountry.setText(user.country)
-                    b.tvName.text = user.name.uppercase()
-                    b.tvCountry.text = user.country
-                    b.tvStatKm.text = "%.1f".format(user.totalKm)
-                    b.tvStatKcal.text = "${user.totalCalories}"
-                    // Cargar stats para logros
-                    try {
-                        val statsResp = RetrofitClient.api.getMonthlyStats()
-                        val runs = statsResp.body()?.data?.totalRuns ?: 0
-                        loadAchievements(runs, user.totalKm, user.totalCalories)
-                    } catch (_: Exception) {
-                        loadAchievements(0, user.totalKm, user.totalCalories)
-                    }
-                    if (user.photoUrl != null) {
-                        Glide.with(this@ProfileFragment).load(user.photoUrl).circleCrop().into(b.ivAvatar)
-                    } else {
-                        b.ivAvatar.setImageDrawable(AvatarHelper.generateInitials(requireContext(), user.name, 100))
-                    }
-                }
-            } catch (e: Exception) { showToast(getString(R.string.error_loading_profile)) }
+    private fun setupThemeToggle() {
+        val currentMode = Prefs(requireContext()).themeMode
+        when (currentMode) {
+            AppCompatDelegate.MODE_NIGHT_NO -> b.toggleTheme.check(R.id.btnThemeLight)
+            AppCompatDelegate.MODE_NIGHT_YES -> b.toggleTheme.check(R.id.btnThemeDark)
+            else -> b.toggleTheme.check(R.id.btnThemeSystem)
+        }
+
+        b.toggleTheme.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+            val mode = when (checkedId) {
+                R.id.btnThemeLight -> AppCompatDelegate.MODE_NIGHT_NO
+                R.id.btnThemeDark -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
+            Prefs(requireContext()).themeMode = mode
+            AppCompatDelegate.setDefaultNightMode(mode)
         }
     }
 
@@ -92,19 +147,11 @@ class ProfileFragment : Fragment() {
     private fun saveProfile() {
         val name = b.etEditName.text.toString().trim()
         val country = b.actvEditCountry.text.toString().trim()
-        if (name.isEmpty() || country.isEmpty()) { showToast(getString(R.string.validation_complete_fields)); return }
-
-        lifecycleScope.launch {
-            try {
-                val resp = RetrofitClient.api.updateProfile(mapOf("name" to name, "country" to country))
-                if (resp.isSuccessful) {
-                    showToast(getString(R.string.success_profile_updated))
-                    Prefs(requireContext()).userName = name
-                    b.tvName.text = name.uppercase()
-                    b.tvCountry.text = country
-                } else showToast(getString(R.string.error_saving_profile))
-            } catch (e: Exception) { showToast(getString(R.string.error_connection)) }
+        if (name.isEmpty() || country.isEmpty()) {
+            showToast(getString(R.string.validation_complete_fields))
+            return
         }
+        viewModel.saveProfile(name, country)
     }
 
     private fun uploadPhoto(uri: Uri) {
@@ -115,25 +162,21 @@ class ProfileFragment : Fragment() {
         val body = MultipartBody.Part.createFormData(
             "photo", file.name, file.asRequestBody("image/jpeg".toMediaTypeOrNull())
         )
-        lifecycleScope.launch {
-            try {
-                val resp = RetrofitClient.api.uploadPhoto(body)
-                val url = resp.body()?.data?.get("photo_url")
-                url?.let {
-                    Glide.with(this@ProfileFragment).load(it).circleCrop().into(b.ivAvatar)
-                    showToast(getString(R.string.success_photo_updated))
-                }
-            } catch (e: Exception) { showToast(getString(R.string.error_uploading_photo)) }
-        }
+        viewModel.uploadPhoto(body)
+    }
+
+    private fun confirmDeleteAccount() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.delete_account_title))
+            .setMessage(getString(R.string.delete_account_message))
+            .setNegativeButton(getString(R.string.btn_cancel), null)
+            .setPositiveButton(getString(R.string.btn_confirm_delete)) { _, _ ->
+                viewModel.deleteAccount()
+            }
+            .show()
     }
 
     private fun doLogout() {
-        lifecycleScope.launch {
-            try { RetrofitClient.api.logout() } catch (_: Exception) {}
-            Prefs(requireContext()).clear()
-            RetrofitClient.clearToken()
-            startActivity(Intent(requireContext(), LoginActivity::class.java))
-            requireActivity().finishAffinity()
-        }
+        viewModel.logout()
     }
 }

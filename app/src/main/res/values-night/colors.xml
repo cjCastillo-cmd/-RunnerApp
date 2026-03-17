@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fondos (oscuro) -->
+    <color name="background">#FF0D1117</color>
+    <color name="surface">#FF161B22</color>
+    <color name="border">#FF30363D</color>
+
+    <!-- Texto -->
+    <color name="text_primary">#FFE6EDF3</color>
+    <color name="text_secondary">#FF8B949E</color>
+    <color name="text_tertiary">#FF7A8088</color>
+
+    <!-- Acento principal -->
+    <color name="accent">#FF4D8AFF</color>
+    <color name="accent_on">#FFFFFFFF</color>
+
+    <!-- Acentos semanticos -->
+    <color name="green">#FF3FB950</color>
+    <color name="amber">#FFD29922</color>
+    <color name="cyan">#FF39D2C0</color>
+    <color name="red">#FFF85149</color>
+
+    <!-- Acento con transparencia para glows -->
+    <color name="accent_20">#334D8AFF</color>
+    <color name="accent_40">#664D8AFF</color>
+
+    <!-- Compatibilidad -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="volt">@color/accent</color>
+    <color name="orange">@color/amber</color>
+    <color name="blue">@color/cyan</color>
+</resources>

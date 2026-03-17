@@ -96,6 +96,9 @@ dependencies {
     // Imagen
     implementation(libs.glide)
 
+    // Charts
+    implementation(libs.mpandroidchart)
+
     // SwipeRefresh
     implementation(libs.androidx.swiperefreshlayout)
 
@@ -106,4 +109,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.intents)
+    androidTestImplementation(libs.androidx.test.rules)
 }

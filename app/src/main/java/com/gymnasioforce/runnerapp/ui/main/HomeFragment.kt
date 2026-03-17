@@ -6,24 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.gymnasioforce.runnerapp.data.local.AppDatabase
-import com.gymnasioforce.runnerapp.data.local.RunEntity
 import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.FragmentHomeBinding
-import com.gymnasioforce.runnerapp.network.RetrofitClient
 import com.gymnasioforce.runnerapp.network.Run
 import com.gymnasioforce.runnerapp.ui.run.RunDetailActivity
 import com.gymnasioforce.runnerapp.ui.run.RunningActivity
 import com.gymnasioforce.runnerapp.utils.Prefs
 import com.gymnasioforce.runnerapp.utils.showToast
-import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
     private lateinit var b: FragmentHomeBinding
-    private val db by lazy { AppDatabase.getInstance(requireContext()) }
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
         b = FragmentHomeBinding.inflate(inflater, container, false)
@@ -37,63 +33,40 @@ class HomeFragment : Fragment() {
         b.btnStart.setOnClickListener {
             startActivity(Intent(requireContext(), RunningActivity::class.java))
         }
-        loadStats()
-        loadRecentRuns()
 
         b.swipeRefresh.setColorSchemeColors(requireContext().getColor(R.color.volt))
         b.swipeRefresh.setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.surface))
-        b.swipeRefresh.setOnRefreshListener {
-            loadStats()
-            loadRecentRuns()
-        }
+        b.swipeRefresh.setOnRefreshListener { viewModel.loadData() }
+
+        observeViewModel()
+        viewModel.loadData()
     }
 
     override fun onResume() {
         super.onResume()
-        loadStats()
-        loadRecentRuns()
+        viewModel.loadData()
     }
 
-    private fun loadStats() {
-        lifecycleScope.launch {
-            try {
-                val resp = RetrofitClient.api.getMonthlyStats()
-                resp.body()?.data?.let { stats ->
-                    b.tvTotalKm.text = "%.1f".format(stats.totalKm)
-                    b.tvTotalRuns.text = "${stats.totalRuns}"
-                    b.tvTotalKcal.text = "${stats.totalCalories}"
-                    val p = stats.avgPace
-                    b.tvAvgPace.text = if (p > 0) "${p.toInt()}:${"%02d".format(((p % 1) * 60).toInt())}" else "-"
-                }
-            } catch (e: Exception) {
-                showToast(getString(R.string.error_loading_data))
-            }
+    private fun observeViewModel() {
+        viewModel.stats.observe(viewLifecycleOwner) { stats ->
+            stats ?: return@observe
+            b.tvTotalKm.text = "%.1f".format(stats.totalKm)
+            b.tvTotalRuns.text = "${stats.totalRuns}"
+            b.tvTotalKcal.text = "${stats.totalCalories}"
+            val p = stats.avgPace
+            b.tvAvgPace.text = if (p > 0) "${p.toInt()}:${"%02d".format(((p % 1) * 60).toInt())}" else "-"
         }
-    }
 
-    private fun loadRecentRuns() {
-        lifecycleScope.launch {
-            try {
-                val resp = RetrofitClient.api.getRuns()
-                val runs = resp.body()?.data ?: emptyList()
+        viewModel.runs.observe(viewLifecycleOwner) { runs ->
+            showRuns(runs)
+        }
 
-                // Guardar en SQLite local
-                val entities = runs.map { it.toEntity() }
-                db.runDao().deleteAll()
-                db.runDao().insertAll(entities)
+        viewModel.loading.observe(viewLifecycleOwner) { loading ->
+            b.swipeRefresh.isRefreshing = loading
+        }
 
-                showRuns(runs)
-            } catch (e: Exception) {
-                // Sin conexion: cargar desde Room
-                val local = db.runDao().getAll()
-                if (local.isNotEmpty()) {
-                    showRuns(local.map { it.toRun() })
-                } else {
-                    b.tvEmptyRuns.visibility = View.VISIBLE
-                }
-            } finally {
-                b.swipeRefresh.isRefreshing = false
-            }
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            error?.let { showToast(getString(R.string.error_loading_data)) }
         }
     }
 
@@ -118,18 +91,4 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
-    private fun Run.toEntity() = RunEntity(
-        id = id, userId = userId, distanceKm = distanceKm, calories = calories,
-        durationSec = durationSec, startLat = startLat, startLng = startLng,
-        endLat = endLat, endLng = endLng, avgPace = avgPace,
-        routeJson = routeJson, createdAt = createdAt
-    )
-
-    private fun RunEntity.toRun() = Run(
-        id = id, userId = userId, distanceKm = distanceKm, calories = calories,
-        durationSec = durationSec, startLat = startLat, startLng = startLng,
-        endLat = endLat, endLng = endLng, avgPace = avgPace,
-        routeJson = routeJson, createdAt = createdAt
-    )
 }

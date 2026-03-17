@@ -57,6 +57,11 @@
             android:foregroundServiceType="location"
             android:exported="false" />
 
+        <!-- Servicio de notificaciones push (FCM) -->
+        <service
+            android:name=".services.FCMService"
+            android:exported="false" />
+
         <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"

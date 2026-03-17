@@ -1,6 +1,8 @@
 package com.gymnasioforce.runnerapp.ui.run
 
 import android.os.Bundle
+import android.view.View
+import com.bumptech.glide.Glide
 import com.gymnasioforce.runnerapp.ui.BaseActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -32,6 +34,7 @@ class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
     private var calories: Int = 0
     private var avgPace: Double? = null
     private var createdAt: String = ""
+    private var photoUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,11 +48,13 @@ class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
         avgPace = intent.getDoubleExtra("avg_pace", 0.0).let { if (it == 0.0) null else it }
         routeJson = intent.getStringExtra("route_json")
         createdAt = intent.getStringExtra("created_at") ?: ""
+        photoUrl = intent.getStringExtra("photo_url")
 
         val mapFrag = supportFragmentManager.findFragmentById(R.id.mapFragment) as? SupportMapFragment
         mapFrag?.getMapAsync(this)
 
         displayStats()
+        loadPhoto()
 
         b.btnBack.setOnClickListener { finish() }
         b.btnDelete.setOnClickListener { deleteRun() }
@@ -103,6 +108,13 @@ class RunDetailActivity : BaseActivity(), OnMapReadyCallback {
         val bounds = LatLngBounds.Builder()
         latLngs.forEach { bounds.include(it) }
         gMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 80))
+    }
+
+    private fun loadPhoto() {
+        if (!photoUrl.isNullOrEmpty()) {
+            b.ivRunPhoto.visibility = View.VISIBLE
+            Glide.with(this).load(photoUrl).into(b.ivRunPhoto)
+        }
     }
 
     private fun deleteRun() {

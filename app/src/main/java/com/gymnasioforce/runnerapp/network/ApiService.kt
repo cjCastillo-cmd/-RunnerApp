@@ -80,4 +80,27 @@ interface ApiService {
 
     @GET("stats/leaderboard")
     suspend fun getLeaderboard(): Response<ApiResponse<List<LeaderboardEntry>>>
+
+    // Charts
+    @GET("charts/weekly")
+    suspend fun getWeeklyChart(): Response<ApiResponse<List<DailyChartData>>>
+
+    @GET("charts/monthly")
+    suspend fun getMonthlyChart(): Response<ApiResponse<List<MonthlyChartData>>>
+
+    // FCM token
+    @POST("user/fcm-token")
+    suspend fun updateFcmToken(@Body body: Map<String, String>): Response<ApiResponse<Any>>
+
+    // Foto de carrera
+    @Multipart
+    @POST("runs/{id}/photo")
+    suspend fun uploadRunPhoto(
+        @Path("id") runId: Int,
+        @Part photo: MultipartBody.Part
+    ): Response<ApiResponse<Map<String, String>>>
+
+    // Eliminar cuenta
+    @DELETE("user/account")
+    suspend fun deleteAccount(): Response<ApiResponse<Any>>
 }

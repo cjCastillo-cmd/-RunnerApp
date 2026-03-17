@@ -3,20 +3,16 @@ package com.gymnasioforce.runnerapp.ui.friends
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.FragmentFriendsBinding
-import com.gymnasioforce.runnerapp.network.FriendRequest
-import com.gymnasioforce.runnerapp.network.FriendResponse
-import com.gymnasioforce.runnerapp.network.RetrofitClient
-import com.gymnasioforce.runnerapp.network.User
 import com.gymnasioforce.runnerapp.utils.showToast
-import kotlinx.coroutines.launch
 
 class FriendsFragment : Fragment() {
 
     private lateinit var b: FragmentFriendsBinding
+    private val viewModel: FriendsViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
         b = FragmentFriendsBinding.inflate(inflater, container, false)
@@ -32,107 +28,68 @@ class FriendsFragment : Fragment() {
 
         b.swipeRefresh.setColorSchemeColors(requireContext().getColor(R.color.volt))
         b.swipeRefresh.setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.surface))
-        b.swipeRefresh.setOnRefreshListener { loadAll() }
+        b.swipeRefresh.setOnRefreshListener { viewModel.loadAll() }
 
-        loadAll()
+        observeViewModel()
+        viewModel.loadAll()
     }
 
-    private fun loadAll() {
-        loadLeaderboard()
-        loadPendingRequests()
-        loadFriends()
-        loadDiscover()
-        // Detener spinner despues de un momento
-        b.swipeRefresh.postDelayed({ b.swipeRefresh.isRefreshing = false }, 2000)
-    }
-
-    private fun loadLeaderboard() {
-        lifecycleScope.launch {
-            try {
-                val entries = RetrofitClient.api.getLeaderboard().body()?.data ?: emptyList()
-                if (entries.isEmpty()) {
-                    b.tvEmptyLeaderboard.visibility = View.VISIBLE
-                } else {
-                    b.tvEmptyLeaderboard.visibility = View.GONE
-                    b.rvLeaderboard.adapter = LeaderboardAdapter(entries)
-                }
-            } catch (e: Exception) {
+    private fun observeViewModel() {
+        viewModel.leaderboard.observe(viewLifecycleOwner) { entries ->
+            if (entries.isEmpty()) {
                 b.tvEmptyLeaderboard.visibility = View.VISIBLE
+            } else {
+                b.tvEmptyLeaderboard.visibility = View.GONE
+                b.rvLeaderboard.adapter = LeaderboardAdapter(entries)
             }
         }
-    }
 
-    private fun loadPendingRequests() {
-        lifecycleScope.launch {
-            try {
-                val pending = RetrofitClient.api.getPendingRequests().body()?.data ?: emptyList()
-                if (pending.isEmpty()) {
-                    b.tvEmptyRequests.visibility = View.VISIBLE
-                    b.tvRequestsCount.visibility = View.GONE
-                    b.rvRequests.visibility = View.GONE
-                } else {
-                    b.tvEmptyRequests.visibility = View.GONE
-                    b.tvRequestsCount.visibility = View.VISIBLE
-                    b.tvRequestsCount.text = "${pending.size}"
-                    b.rvRequests.visibility = View.VISIBLE
-                    b.rvRequests.adapter = RequestAdapter(pending,
-                        onAccept = { friend -> respondRequest(friend.id, "accept") },
-                        onReject = { friend -> respondRequest(friend.id, "reject") }
-                    )
-                }
-            } catch (e: Exception) {
+        viewModel.pending.observe(viewLifecycleOwner) { pending ->
+            if (pending.isEmpty()) {
                 b.tvEmptyRequests.visibility = View.VISIBLE
+                b.tvRequestsCount.visibility = View.GONE
+                b.rvRequests.visibility = View.GONE
+            } else {
+                b.tvEmptyRequests.visibility = View.GONE
+                b.tvRequestsCount.visibility = View.VISIBLE
+                b.tvRequestsCount.text = "${pending.size}"
+                b.rvRequests.visibility = View.VISIBLE
+                b.rvRequests.adapter = RequestAdapter(pending,
+                    onAccept = { friend -> viewModel.respondRequest(friend.id, "accept") },
+                    onReject = { friend -> viewModel.respondRequest(friend.id, "reject") }
+                )
             }
         }
-    }
 
-    private fun respondRequest(requestId: Int, action: String) {
-        lifecycleScope.launch {
-            try {
-                val resp = RetrofitClient.api.respondFriendRequest(FriendResponse(requestId, action))
-                if (resp.isSuccessful) {
-                    val msg = if (action == "accept") getString(R.string.success_request_accepted) else getString(R.string.success_request_rejected)
-                    showToast(msg)
-                    loadPendingRequests()
-                    if (action == "accept") {
-                        loadFriends()
-                        loadLeaderboard()
-                    }
+        viewModel.friends.observe(viewLifecycleOwner) { users ->
+            b.rvFriends.adapter = UserListAdapter(users, showAddBtn = false)
+            b.tvEmptyFriends.visibility = if (users.isEmpty()) View.VISIBLE else View.GONE
+        }
+
+        viewModel.discover.observe(viewLifecycleOwner) { users ->
+            b.rvDiscover.adapter = UserListAdapter(users, showAddBtn = true) { user ->
+                viewModel.sendRequest(user.id, user.name)
+            }
+            b.tvEmptyDiscover.visibility = if (users.isEmpty()) View.VISIBLE else View.GONE
+        }
+
+        viewModel.loading.observe(viewLifecycleOwner) { loading ->
+            b.swipeRefresh.isRefreshing = loading
+        }
+
+        viewModel.message.observe(viewLifecycleOwner) { msg ->
+            msg ?: return@observe
+            when {
+                msg == "accepted" -> showToast(getString(R.string.success_request_accepted))
+                msg == "rejected" -> showToast(getString(R.string.success_request_rejected))
+                msg.startsWith("sent:") -> {
+                    val name = msg.removePrefix("sent:")
+                    showToast(getString(R.string.success_request_sent, name))
                 }
-            } catch (e: Exception) { showToast(getString(R.string.error_connection)) }
-        }
-    }
-
-    private fun loadFriends() {
-        lifecycleScope.launch {
-            try {
-                val friends = RetrofitClient.api.getFriends().body()?.data ?: emptyList()
-                val users = friends.mapNotNull { it.friend }
-                b.rvFriends.adapter = UserListAdapter(users, showAddBtn = false)
-                b.tvEmptyFriends.visibility = if (users.isEmpty()) View.VISIBLE else View.GONE
-            } catch (e: Exception) { showToast(getString(R.string.error_loading_friends)) }
-        }
-    }
-
-    private fun loadDiscover() {
-        lifecycleScope.launch {
-            try {
-                val users = RetrofitClient.api.getUsersByCountry().body()?.data ?: emptyList()
-                b.rvDiscover.adapter = UserListAdapter(users, showAddBtn = true) { user ->
-                    sendFriendRequest(user)
-                }
-                b.tvEmptyDiscover.visibility = if (users.isEmpty()) View.VISIBLE else View.GONE
-            } catch (e: Exception) { showToast(getString(R.string.error_loading_users)) }
-        }
-    }
-
-    private fun sendFriendRequest(user: User) {
-        lifecycleScope.launch {
-            try {
-                val resp = RetrofitClient.api.sendFriendRequest(FriendRequest(user.id))
-                if (resp.isSuccessful) showToast(getString(R.string.success_request_sent, user.name))
-                else showToast(getString(R.string.error_send_request))
-            } catch (e: Exception) { showToast(getString(R.string.error_connection)) }
+                msg == "error" -> showToast(getString(R.string.error_connection))
+                msg == "error_send" -> showToast(getString(R.string.error_send_request))
+            }
+            viewModel.clearMessage()
         }
     }
 }

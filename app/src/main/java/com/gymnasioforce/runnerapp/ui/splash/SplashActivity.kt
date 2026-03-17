@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.ActivitySplashBinding
+import androidx.appcompat.app.AppCompatDelegate
 import com.gymnasioforce.runnerapp.ui.auth.LoginActivity
+import com.gymnasioforce.runnerapp.utils.Prefs
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -18,6 +20,8 @@ class SplashActivity : AppCompatActivity() {
     private lateinit var b: ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Aplicar tema guardado antes de inflar
+        AppCompatDelegate.setDefaultNightMode(Prefs(this).themeMode)
         super.onCreate(savedInstanceState)
         b = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(b.root)

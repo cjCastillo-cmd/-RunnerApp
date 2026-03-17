@@ -1,6 +1,7 @@
 package com.gymnasioforce.runnerapp.utils
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 
 class Prefs(context: Context) {
     private val prefs = context.getSharedPreferences("runner_prefs", Context.MODE_PRIVATE)
@@ -16,6 +17,10 @@ class Prefs(context: Context) {
     var userName: String
         get()  = prefs.getString("user_name", "") ?: ""
         set(v) = prefs.edit().putString("user_name", v).apply()
+
+    var themeMode: Int
+        get()  = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        set(v) = prefs.edit().putInt("theme_mode", v).apply()
 
     fun clear() = prefs.edit().clear().apply()
 }

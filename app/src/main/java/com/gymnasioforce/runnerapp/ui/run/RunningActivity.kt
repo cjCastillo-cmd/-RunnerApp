@@ -135,6 +135,7 @@ class RunningActivity : BaseActivity(), OnMapReadyCallback {
 
                         // Mostrar pantalla de resumen
                         val summaryIntent = Intent(this@RunningActivity, RunSummaryActivity::class.java).apply {
+                            putExtra("run_id", run.id)
                             putExtra("distance_km", run.distanceKm)
                             putExtra("duration_sec", run.durationSec)
                             putExtra("calories", run.calories)

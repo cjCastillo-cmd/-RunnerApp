@@ -260,10 +260,66 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 style="@style/RunnerButton.Volt"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:paddingHorizontal="48dp"
                 android:text="@string/btn_save_changes"
                 android:layout_marginTop="16dp" />
+
+            <!-- Separador -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/border"
+                android:layout_marginTop="24dp" />
+
+            <!-- Selector de tema -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_theme"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:letterSpacing="0.2"
+                android:layout_marginTop="24dp" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnThemeLight"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:text="@string/theme_light"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnThemeDark"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:text="@string/theme_dark"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnThemeSystem"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:text="@string/theme_system"
+                    android:textSize="12sp" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <!-- Separador -->
             <View
@@ -276,10 +332,23 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogout"
                 style="@style/RunnerButton.Red"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:paddingHorizontal="48dp"
                 android:text="@string/btn_logout"
                 android:layout_marginTop="24dp" />
+
+            <!-- Boton eliminar cuenta -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeleteAccount"
+                style="@style/RunnerButton.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:text="@string/btn_delete_account"
+                android:textColor="@color/red"
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
     </ScrollView>

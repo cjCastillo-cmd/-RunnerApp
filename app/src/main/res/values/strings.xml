@@ -193,12 +193,38 @@
     <!-- Accesibilidad -->
     <string name="cd_user_avatar">Avatar del usuario</string>
     <string name="hint_verification_digit">Digito</string>
+    <string name="cd_back">Volver</string>
 
     <!-- Bottom Navigation -->
     <string name="nav_home">Inicio</string>
     <string name="nav_stats">Stats</string>
     <string name="nav_social">Social</string>
     <string name="nav_profile">Perfil</string>
+
+    <!-- Tema -->
+    <string name="label_theme">APARIENCIA</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="theme_system">Sistema</string>
+
+    <!-- Eliminar cuenta -->
+    <string name="btn_delete_account">Eliminar cuenta</string>
+    <string name="delete_account_title">Eliminar cuenta</string>
+    <string name="delete_account_message">Esta accion es irreversible. Se eliminaran todas tus carreras, amigos y datos. Estas seguro?</string>
+    <string name="btn_confirm_delete">Eliminar</string>
+    <string name="success_account_deleted">Cuenta eliminada</string>
+    <string name="error_deleting_account">Error al eliminar cuenta</string>
+
+    <!-- Charts -->
+    <string name="weekly_distance">DISTANCIA SEMANAL</string>
+    <string name="monthly_progress">PROGRESO MENSUAL</string>
+
+    <!-- Push notifications -->
+    <string name="notif_channel_social">Notificaciones sociales</string>
+
+    <!-- Foto de carrera -->
+    <string name="btn_add_photo">AGREGAR FOTO</string>
+    <string name="label_run_photo">Foto de la carrera</string>
 
     <!-- Paises -->
     <string-array name="countries">

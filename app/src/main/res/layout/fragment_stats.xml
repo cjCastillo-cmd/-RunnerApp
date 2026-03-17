@@ -468,6 +468,40 @@
 
             </LinearLayout>
 
+            <!-- ===== GRAFICOS ===== -->
+
+            <!-- Grafico semanal: barras de km por dia -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/weekly_distance"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:letterSpacing="0.3"
+                android:layout_marginTop="28dp" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chartWeekly"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="8dp" />
+
+            <!-- Grafico mensual: linea de km por mes -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/monthly_progress"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:letterSpacing="0.3"
+                android:layout_marginTop="28dp" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chartMonthly"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="8dp" />
+
             <!-- Mensaje sin datos -->
             <TextView
                 android:id="@+id/tvNoStats"
