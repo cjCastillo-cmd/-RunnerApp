@@ -31,7 +31,9 @@ class FriendsFragment : Fragment() {
         b.swipeRefresh.setOnRefreshListener { viewModel.loadAll() }
 
         observeViewModel()
-        viewModel.loadAll()
+        if (viewModel.leaderboard.value.isNullOrEmpty()) {
+            viewModel.loadAll()
+        }
     }
 
     private fun observeViewModel() {
@@ -55,8 +57,8 @@ class FriendsFragment : Fragment() {
                 b.tvRequestsCount.text = "${pending.size}"
                 b.rvRequests.visibility = View.VISIBLE
                 b.rvRequests.adapter = RequestAdapter(pending,
-                    onAccept = { friend -> viewModel.respondRequest(friend.id, "accept") },
-                    onReject = { friend -> viewModel.respondRequest(friend.id, "reject") }
+                    onAccept = { friend -> viewModel.respondRequest(friend.id, "accepted") },
+                    onReject = { friend -> viewModel.respondRequest(friend.id, "rejected") }
                 )
             }
         }

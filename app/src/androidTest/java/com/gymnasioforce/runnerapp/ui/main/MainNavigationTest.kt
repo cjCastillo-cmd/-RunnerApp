@@ -23,11 +23,6 @@ class MainNavigationTest {
     }
 
     @Test
-    fun fab_isVisible() {
-        onView(withId(R.id.fabRun)).check(matches(isDisplayed()))
-    }
-
-    @Test
     fun navigateToStats_showsStatsFragment() {
         onView(withId(R.id.nav_stats)).perform(click())
         onView(withText(R.string.title_your_stats)).check(matches(isDisplayed()))

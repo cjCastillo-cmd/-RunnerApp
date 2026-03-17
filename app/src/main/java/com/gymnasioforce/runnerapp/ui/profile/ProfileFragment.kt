@@ -19,6 +19,7 @@ import com.gymnasioforce.runnerapp.network.RetrofitClient
 import com.gymnasioforce.runnerapp.ui.auth.LoginActivity
 import com.gymnasioforce.runnerapp.utils.AvatarHelper
 import com.gymnasioforce.runnerapp.utils.Prefs
+import com.gymnasioforce.runnerapp.utils.resolvePhotoUrl
 import com.gymnasioforce.runnerapp.utils.showToast
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -72,8 +73,9 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.photoUrl.observe(viewLifecycleOwner) { url ->
-            if (url != null) {
-                Glide.with(this).load(url).circleCrop().into(b.ivAvatar)
+            val resolved = resolvePhotoUrl(url)
+            if (resolved != null) {
+                Glide.with(this).load(resolved).circleCrop().into(b.ivAvatar)
             } else {
                 val name = viewModel.user.value?.name ?: ""
                 b.ivAvatar.setImageDrawable(AvatarHelper.generateInitials(requireContext(), name, 100))

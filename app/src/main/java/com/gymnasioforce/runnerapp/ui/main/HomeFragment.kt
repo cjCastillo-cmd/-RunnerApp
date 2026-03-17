@@ -39,12 +39,9 @@ class HomeFragment : Fragment() {
         b.swipeRefresh.setOnRefreshListener { viewModel.loadData() }
 
         observeViewModel()
-        viewModel.loadData()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadData()
+        if (viewModel.runs.value.isNullOrEmpty()) {
+            viewModel.loadData()
+        }
     }
 
     private fun observeViewModel() {
@@ -66,7 +63,9 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
-            error?.let { showToast(getString(R.string.error_loading_data)) }
+            if (!error.isNullOrEmpty() && viewModel.loading.value == false) {
+                showToast(getString(R.string.error_loading_data))
+            }
         }
     }
 

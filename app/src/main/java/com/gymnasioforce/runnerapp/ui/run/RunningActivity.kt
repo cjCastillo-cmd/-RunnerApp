@@ -110,7 +110,7 @@ class RunningActivity : BaseActivity() {
         ContextCompat.startForegroundService(this, intent)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         b.btnFinish.text = getString(R.string.btn_finish)
-        b.btnCancel.visibility = View.GONE
+        b.btnCancel.visibility = View.VISIBLE
         handler.post(uiUpdater)
     }
 

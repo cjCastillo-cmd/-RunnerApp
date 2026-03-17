@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gymnasioforce.runnerapp.databinding.ItemLeaderboardBinding
 import com.gymnasioforce.runnerapp.network.LeaderboardEntry
+import com.gymnasioforce.runnerapp.utils.resolvePhotoUrl
 
 class LeaderboardAdapter(
     private val entries: List<LeaderboardEntry>
@@ -29,7 +30,7 @@ class LeaderboardAdapter(
             h.b.tvPosition.setTextColor(h.b.root.context.getColor(com.gymnasioforce.runnerapp.R.color.volt))
         }
 
-        entry.photoUrl?.let {
+        resolvePhotoUrl(entry.photoUrl)?.let {
             Glide.with(h.b.ivAvatar).load(it).circleCrop().into(h.b.ivAvatar)
         }
     }

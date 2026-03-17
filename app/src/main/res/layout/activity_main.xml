@@ -18,25 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- FAB circular volt para START -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabRun"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/cd_start_run"
-        app:backgroundTint="@color/accent"
-        app:tint="@color/background"
-        app:fabSize="auto"
-        app:fabCustomSize="72dp"
-        app:maxImageSize="32dp"
-        app:srcCompat="@drawable/ic_run"
-        app:elevation="12dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:translationY="-20dp"
-        android:translationZ="8dp" />
-
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"

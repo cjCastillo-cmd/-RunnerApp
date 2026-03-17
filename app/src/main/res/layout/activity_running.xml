@@ -182,7 +182,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Cancelar -->
+        <!-- Cancelar (oculto hasta que inicie la carrera) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
             style="@style/RunnerButton.Outline"
@@ -192,16 +192,17 @@
             android:text="@string/btn_cancel"
             android:textColor="@color/text_secondary"
             app:strokeColor="@color/border"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"
+            android:visibility="gone" />
 
-        <!-- Finalizar -->
+        <!-- Iniciar / Finalizar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnFinish"
             style="@style/RunnerButton.Volt"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
-            android:text="@string/btn_finish"
+            android:text="@string/btn_start"
             android:layout_marginStart="8dp" />
 
     </LinearLayout>

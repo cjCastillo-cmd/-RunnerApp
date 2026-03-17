@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gymnasioforce.runnerapp.databinding.ItemUserBinding
 import com.gymnasioforce.runnerapp.network.User
+import com.gymnasioforce.runnerapp.utils.resolvePhotoUrl
 
 class UserListAdapter(
     private val users: List<User>,
@@ -25,7 +26,7 @@ class UserListAdapter(
         h.b.tvKm.text = "%.1f km".format(user.totalKm)
         h.b.btnAction.visibility = if (showAddBtn) View.VISIBLE else View.GONE
         h.b.btnAction.setOnClickListener { onAdd?.invoke(user) }
-        user.photoUrl?.let {
+        resolvePhotoUrl(user.photoUrl)?.let {
             Glide.with(h.b.ivAvatar).load(it).circleCrop().into(h.b.ivAvatar)
         }
     }

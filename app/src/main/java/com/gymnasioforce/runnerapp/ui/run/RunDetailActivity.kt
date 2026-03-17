@@ -11,6 +11,7 @@ import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.data.local.AppDatabase
 import com.gymnasioforce.runnerapp.databinding.ActivityRunDetailBinding
 import com.gymnasioforce.runnerapp.network.RetrofitClient
+import com.gymnasioforce.runnerapp.utils.resolvePhotoUrl
 import com.gymnasioforce.runnerapp.utils.showToast
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
@@ -120,9 +121,10 @@ class RunDetailActivity : BaseActivity() {
     }
 
     private fun loadPhoto() {
-        if (!photoUrl.isNullOrEmpty()) {
+        val resolved = resolvePhotoUrl(photoUrl)
+        if (resolved != null) {
             b.ivRunPhoto.visibility = View.VISIBLE
-            Glide.with(this).load(photoUrl).into(b.ivRunPhoto)
+            Glide.with(this).load(resolved).into(b.ivRunPhoto)
         }
     }
 

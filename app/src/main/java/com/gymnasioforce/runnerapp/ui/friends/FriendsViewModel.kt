@@ -46,7 +46,7 @@ class FriendsViewModel : ViewModel() {
         viewModelScope.launch {
             friendRepo.respondRequest(requestId, action)
                 .onSuccess {
-                    _message.value = if (action == "accept") "accepted" else "rejected"
+                    _message.value = if (action == "accepted") "accepted" else "rejected"
                     loadAll()
                 }
                 .onFailure { _message.value = "error" }

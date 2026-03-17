@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.gymnasioforce.runnerapp.databinding.ItemRequestBinding
 import com.gymnasioforce.runnerapp.network.Friend
 import com.gymnasioforce.runnerapp.utils.AvatarHelper
+import com.gymnasioforce.runnerapp.utils.resolvePhotoUrl
 
 class RequestAdapter(
     private val requests: List<Friend>,
@@ -27,8 +28,9 @@ class RequestAdapter(
         h.b.tvName.text = user?.name ?: "Usuario"
         h.b.tvMessage.text = h.b.root.context.getString(com.gymnasioforce.runnerapp.R.string.request_message)
 
-        if (user?.photoUrl != null) {
-            Glide.with(h.b.ivAvatar).load(user.photoUrl).circleCrop().into(h.b.ivAvatar)
+        val resolved = resolvePhotoUrl(user?.photoUrl)
+        if (resolved != null) {
+            Glide.with(h.b.ivAvatar).load(resolved).circleCrop().into(h.b.ivAvatar)
         } else {
             h.b.ivAvatar.setImageDrawable(
                 AvatarHelper.generateInitials(h.b.root.context, user?.name ?: "?")

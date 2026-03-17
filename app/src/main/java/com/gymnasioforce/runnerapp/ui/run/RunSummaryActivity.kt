@@ -11,6 +11,7 @@ import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.ActivityRunSummaryBinding
 import com.gymnasioforce.runnerapp.network.RetrofitClient
 import com.gymnasioforce.runnerapp.ui.BaseActivity
+import com.gymnasioforce.runnerapp.utils.resolvePhotoUrl
 import com.gymnasioforce.runnerapp.utils.showToast
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -78,7 +79,7 @@ class RunSummaryActivity : BaseActivity() {
                 val resp = RetrofitClient.api.uploadRunPhoto(runId, body)
                 if (resp.isSuccessful) {
                     val url = resp.body()?.data?.get("photo_url")
-                    url?.let {
+                    resolvePhotoUrl(url)?.let {
                         b.ivRunPhoto.visibility = View.VISIBLE
                         Glide.with(this@RunSummaryActivity).load(it).into(b.ivRunPhoto)
                         b.btnAddPhoto.text = getString(R.string.success_photo_updated)

@@ -30,7 +30,9 @@ class StatsFragment : Fragment() {
     override fun onViewCreated(view: View, state: Bundle?) {
         super.onViewCreated(view, state)
         observeViewModel()
-        viewModel.loadAll()
+        if (viewModel.monthly.value == null) {
+            viewModel.loadAll()
+        }
     }
 
     private fun observeViewModel() {
@@ -65,7 +67,9 @@ class StatsFragment : Fragment() {
         }
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
-            error?.let { showToast(getString(R.string.error_loading_stats)) }
+            if (!error.isNullOrEmpty() && viewModel.loading.value == false) {
+                showToast(getString(R.string.error_loading_stats))
+            }
         }
     }
 

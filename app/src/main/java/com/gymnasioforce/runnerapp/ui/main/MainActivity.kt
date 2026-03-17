@@ -1,13 +1,11 @@
 package com.gymnasioforce.runnerapp.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import com.gymnasioforce.runnerapp.ui.BaseActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.gymnasioforce.runnerapp.R
 import com.gymnasioforce.runnerapp.databinding.ActivityMainBinding
-import com.gymnasioforce.runnerapp.ui.run.RunningActivity
 
 class MainActivity : BaseActivity() {
 
@@ -20,9 +18,5 @@ class MainActivity : BaseActivity() {
 
         val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         b.bottomNav.setupWithNavController(navHost.navController)
-
-        b.fabRun.setOnClickListener {
-            startActivity(Intent(this, RunningActivity::class.java))
-        }
     }
 }
