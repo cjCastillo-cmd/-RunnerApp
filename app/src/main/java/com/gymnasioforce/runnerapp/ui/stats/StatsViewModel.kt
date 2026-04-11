@@ -1,13 +1,18 @@
 package com.gymnasioforce.runnerapp.ui.stats
 
+import android.app.Application
 import androidx.lifecycle.*
 import com.gymnasioforce.runnerapp.data.repository.StatsRepository
 import com.gymnasioforce.runnerapp.network.*
 import kotlinx.coroutines.launch
 
-class StatsViewModel : ViewModel() {
+/**
+ * ViewModel para la pantalla de estadisticas.
+ * Carga stats mensuales, comparaciones y datos para graficos.
+ */
+class StatsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repo = StatsRepository()
+    private val repo = StatsRepository(application)
 
     private val _monthly = MutableLiveData<MonthlyStats?>()
     val monthly: LiveData<MonthlyStats?> = _monthly
@@ -30,6 +35,7 @@ class StatsViewModel : ViewModel() {
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    // Cargar todas las estadisticas
     fun loadAll() {
         viewModelScope.launch {
             _loading.value = true

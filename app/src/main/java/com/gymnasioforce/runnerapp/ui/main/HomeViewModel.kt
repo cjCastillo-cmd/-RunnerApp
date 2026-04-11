@@ -8,10 +8,15 @@ import com.gymnasioforce.runnerapp.network.MonthlyStats
 import com.gymnasioforce.runnerapp.network.Run
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel para la pantalla Home.
+ * Carga carreras recientes y estadisticas mensuales.
+ * Funciona offline gracias a RunRepository y StatsRepository.
+ */
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val runRepo = RunRepository(application)
-    private val statsRepo = StatsRepository()
+    private val statsRepo = StatsRepository(application)
 
     private val _runs = MutableLiveData<List<Run>>(emptyList())
     val runs: LiveData<List<Run>> = _runs
@@ -25,6 +30,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    // Cargar datos: stats y carreras recientes
     fun loadData() {
         viewModelScope.launch {
             _loading.value = true

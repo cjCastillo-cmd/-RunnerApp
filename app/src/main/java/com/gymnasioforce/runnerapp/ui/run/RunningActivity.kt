@@ -11,10 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.gymnasioforce.runnerapp.R
-import com.gymnasioforce.runnerapp.data.local.AppDatabase
-import com.gymnasioforce.runnerapp.data.local.RunEntity
+import com.gymnasioforce.runnerapp.data.repository.RunRepository
 import com.gymnasioforce.runnerapp.databinding.ActivityRunningBinding
-import com.gymnasioforce.runnerapp.network.RetrofitClient
 import com.gymnasioforce.runnerapp.network.SaveRunRequest
 import com.gymnasioforce.runnerapp.services.RunningService
 import com.gymnasioforce.runnerapp.utils.showToast
@@ -159,46 +157,33 @@ class RunningActivity : BaseActivity() {
 
         b.btnFinish.isEnabled = false
 
+        // Guardar carrera via Repository (soporta offline)
+        val runRepo = RunRepository(this)
         lifecycleScope.launch {
-            try {
-                val resp = RetrofitClient.api.saveRun(SaveRunRequest(
-                    distanceKm = km, durationSec = duration,
-                    startLat = start?.latitude ?: 0.0, startLng = start?.longitude ?: 0.0,
-                    endLat = end?.latitude ?: 0.0, endLng = end?.longitude ?: 0.0,
-                    routeJson = route
-                ))
-                if (resp.isSuccessful) {
-                    resp.body()?.data?.let { run ->
-                        val entity = RunEntity(
-                            id = run.id, userId = run.userId,
-                            distanceKm = run.distanceKm, calories = run.calories,
-                            durationSec = run.durationSec,
-                            startLat = run.startLat, startLng = run.startLng,
-                            endLat = run.endLat, endLng = run.endLng,
-                            avgPace = run.avgPace, routeJson = run.routeJson,
-                            createdAt = run.createdAt
-                        )
-                        AppDatabase.getInstance(this@RunningActivity).runDao().insert(entity)
-
-                        val summaryIntent = Intent(this@RunningActivity, RunSummaryActivity::class.java).apply {
-                            putExtra("run_id", run.id)
-                            putExtra("distance_km", run.distanceKm)
-                            putExtra("duration_sec", run.durationSec)
-                            putExtra("calories", run.calories)
-                            putExtra("avg_pace", run.avgPace ?: 0.0)
-                            putExtra("created_at", run.createdAt)
-                        }
-                        startActivity(summaryIntent)
+            val request = SaveRunRequest(
+                distanceKm = km, durationSec = duration,
+                startLat = start?.latitude ?: 0.0, startLng = start?.longitude ?: 0.0,
+                endLat = end?.latitude ?: 0.0, endLng = end?.longitude ?: 0.0,
+                routeJson = route
+            )
+            runRepo.saveRun(request)
+                .onSuccess { run ->
+                    val summaryIntent = Intent(this@RunningActivity, RunSummaryActivity::class.java).apply {
+                        putExtra("run_id", run.id)
+                        putExtra("distance_km", run.distanceKm)
+                        putExtra("duration_sec", run.durationSec)
+                        putExtra("calories", run.calories)
+                        putExtra("avg_pace", run.avgPace ?: 0.0)
+                        putExtra("created_at", run.createdAt)
                     }
-                } else {
+                    startActivity(summaryIntent)
+                }
+                .onFailure {
                     showToast(getString(R.string.error_saving_run))
                 }
-            } catch (e: Exception) {
-                showToast(getString(R.string.error_connection))
-            } finally {
-                stopService(Intent(this@RunningActivity, RunningService::class.java))
-                finish()
-            }
+
+            stopService(Intent(this@RunningActivity, RunningService::class.java))
+            finish()
         }
     }
 

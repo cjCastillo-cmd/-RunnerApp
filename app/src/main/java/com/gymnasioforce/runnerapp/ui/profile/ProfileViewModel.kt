@@ -1,5 +1,6 @@
 package com.gymnasioforce.runnerapp.ui.profile
 
+import android.app.Application
 import androidx.lifecycle.*
 import com.gymnasioforce.runnerapp.data.repository.StatsRepository
 import com.gymnasioforce.runnerapp.data.repository.UserRepository
@@ -7,10 +8,14 @@ import com.gymnasioforce.runnerapp.network.User
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
-class ProfileViewModel : ViewModel() {
+/**
+ * ViewModel para la pantalla de perfil.
+ * Maneja datos del usuario, foto, logros y eliminacion de cuenta.
+ */
+class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
     private val userRepo = UserRepository()
-    private val statsRepo = StatsRepository()
+    private val statsRepo = StatsRepository(application)
 
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> = _user
@@ -27,6 +32,7 @@ class ProfileViewModel : ViewModel() {
     private val _accountDeleted = MutableLiveData(false)
     val accountDeleted: LiveData<Boolean> = _accountDeleted
 
+    // Cargar perfil del usuario y stats
     fun loadProfile() {
         viewModelScope.launch {
             userRepo.getProfile().onSuccess { user ->
@@ -39,6 +45,7 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
+    // Guardar cambios en el perfil
     fun saveProfile(name: String, country: String) {
         viewModelScope.launch {
             userRepo.updateProfile(name, country)
@@ -50,6 +57,7 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
+    // Subir foto de perfil
     fun uploadPhoto(photo: MultipartBody.Part) {
         viewModelScope.launch {
             userRepo.uploadPhoto(photo)
@@ -58,6 +66,7 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
+    // Eliminar cuenta permanentemente
     fun deleteAccount() {
         viewModelScope.launch {
             userRepo.deleteAccount()
@@ -66,6 +75,7 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
+    // Cerrar sesion
     fun logout() {
         viewModelScope.launch {
             userRepo.logout()

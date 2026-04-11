@@ -1,15 +1,20 @@
 package com.gymnasioforce.runnerapp.ui.friends
 
+import android.app.Application
 import androidx.lifecycle.*
 import com.gymnasioforce.runnerapp.data.repository.FriendRepository
 import com.gymnasioforce.runnerapp.data.repository.StatsRepository
 import com.gymnasioforce.runnerapp.network.*
 import kotlinx.coroutines.launch
 
-class FriendsViewModel : ViewModel() {
+/**
+ * ViewModel para la pantalla social.
+ * Maneja leaderboard, solicitudes de amistad, amigos y descubrimiento.
+ */
+class FriendsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val friendRepo = FriendRepository()
-    private val statsRepo = StatsRepository()
+    private val statsRepo = StatsRepository(application)
 
     private val _leaderboard = MutableLiveData<List<LeaderboardEntry>>(emptyList())
     val leaderboard: LiveData<List<LeaderboardEntry>> = _leaderboard
@@ -29,6 +34,7 @@ class FriendsViewModel : ViewModel() {
     private val _message = MutableLiveData<String?>()
     val message: LiveData<String?> = _message
 
+    // Cargar todos los datos sociales
     fun loadAll() {
         viewModelScope.launch {
             _loading.value = true
@@ -42,6 +48,7 @@ class FriendsViewModel : ViewModel() {
         }
     }
 
+    // Aceptar o rechazar solicitud de amistad
     fun respondRequest(requestId: Int, action: String) {
         viewModelScope.launch {
             friendRepo.respondRequest(requestId, action)
@@ -53,6 +60,7 @@ class FriendsViewModel : ViewModel() {
         }
     }
 
+    // Enviar solicitud de amistad
     fun sendRequest(userId: Int, userName: String) {
         viewModelScope.launch {
             friendRepo.sendRequest(userId)
