@@ -194,16 +194,19 @@ class ProfileFragment : Fragment() {
     }
 
     private fun launchCamera() {
-        val photoFile = File(
-            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            "profile_${System.currentTimeMillis()}.jpg"
-        )
-        cameraUri = FileProvider.getUriForFile(
-            requireContext(),
-            "${requireContext().packageName}.fileprovider",
-            photoFile
-        )
-        takePhoto.launch(cameraUri!!)
+        try {
+            val dir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                ?: requireContext().cacheDir
+            val photoFile = File(dir, "profile_${System.currentTimeMillis()}.jpg")
+            cameraUri = FileProvider.getUriForFile(
+                requireContext(),
+                "${requireContext().packageName}.fileprovider",
+                photoFile
+            )
+            takePhoto.launch(cameraUri!!)
+        } catch (e: Exception) {
+            showToast("Error al abrir camara: ${e.message}")
+        }
     }
 
     private fun uploadPhoto(uri: Uri) {
