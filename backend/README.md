@@ -50,10 +50,10 @@ php artisan serve
 
 ## Configuracion de la app Android
 
-La app se conecta al backend usando la `BASE_URL` definida en el codigo. Para desarrollo local, asegurate de que tu PC y celular esten en la misma red Wi-Fi y usa la IP local de tu PC:
+La app se conecta al backend. El servidor esta en:
 
 ```
-http://TU_IP_LOCAL/runner_backend/public/api/
+http://34.172.180.141/runner_backend/public/api/
 ```
 
 ## Estructura de la API
