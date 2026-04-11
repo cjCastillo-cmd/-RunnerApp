@@ -64,7 +64,11 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     fun sendRequest(userId: Int, userName: String) {
         viewModelScope.launch {
             friendRepo.sendRequest(userId)
-                .onSuccess { _message.value = "sent:$userName" }
+                .onSuccess {
+                    _message.value = "sent:$userName"
+                    // Quitar usuario de la lista de descubrir
+                    _discover.value = _discover.value?.filter { it.id != userId }
+                }
                 .onFailure { _message.value = "error_send" }
         }
     }
