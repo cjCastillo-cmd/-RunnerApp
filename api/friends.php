@@ -30,7 +30,7 @@ function sendRequest(): void {
     $id = (int)db()->lastInsertId();
     $stmt = db()->prepare("SELECT * FROM friends WHERE id = ?");
     $stmt->execute([$id]);
-    success($stmt->fetch(), 201);
+    success(friendPublic($stmt->fetch()), 201);
 }
 
 function respond(): void {
@@ -55,7 +55,7 @@ function respond(): void {
 
     $stmt = db()->prepare("SELECT * FROM friends WHERE id = ?");
     $stmt->execute([$requestId]);
-    success($stmt->fetch());
+    success(friendPublic($stmt->fetch()));
 }
 
 function index(): void {
@@ -125,4 +125,12 @@ function pending(): void {
     }, $rows);
 
     success($result);
+}
+
+// Convertir tipos de un registro de friend
+function friendPublic(array $f): array {
+    $f['id'] = (int)$f['id'];
+    $f['user_id'] = (int)$f['user_id'];
+    $f['friend_id'] = (int)$f['friend_id'];
+    return $f;
 }
