@@ -1,6 +1,8 @@
 package com.gymnasioforce.runnerapp.ui.profile
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -8,6 +10,7 @@ import android.view.*
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -41,6 +44,11 @@ class ProfileFragment : Fragment() {
 
     private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicture()) { success: Boolean ->
         if (success) cameraUri?.let { uploadPhoto(it) }
+    }
+
+    private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) launchCamera()
+        else showToast("Permiso de camara denegado")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
@@ -172,21 +180,30 @@ class ProfileFragment : Fragment() {
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> {
-                        val photoFile = File(
-                            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                            "profile_${System.currentTimeMillis()}.jpg"
-                        )
-                        cameraUri = FileProvider.getUriForFile(
-                            requireContext(),
-                            "${requireContext().packageName}.fileprovider",
-                            photoFile
-                        )
-                        takePhoto.launch(cameraUri!!)
+                        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                            == PackageManager.PERMISSION_GRANTED) {
+                            launchCamera()
+                        } else {
+                            requestCameraPermission.launch(Manifest.permission.CAMERA)
+                        }
                     }
                     1 -> pickFromGallery.launch("image/*")
                 }
             }
             .show()
+    }
+
+    private fun launchCamera() {
+        val photoFile = File(
+            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "profile_${System.currentTimeMillis()}.jpg"
+        )
+        cameraUri = FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.fileprovider",
+            photoFile
+        )
+        takePhoto.launch(cameraUri!!)
     }
 
     private fun uploadPhoto(uri: Uri) {
