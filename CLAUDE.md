@@ -27,7 +27,7 @@ utils/       -> Helpers (NetworkHelper, etc.)
 - Cada feature tiene su propio paquete en `ui/`
 - ViewModels exponen LiveData, no StateFlow
 - Repositorios manejan la logica de datos (local + remoto)
-- BASE_URL debug: `http://192.168.1.156/runner_backend/public/api/`
+- BASE_URL debug: `http://34.172.180.141/runner_backend/public/api/`
 - Navegacion entre Activities (no Navigation Component single-activity)
 
 ## Testing
