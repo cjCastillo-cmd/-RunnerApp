@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">RunnerApp</string>
+    <string name="app_name">RunBoost</string>
 
     <!-- Branding -->
-    <string name="app_title_runner">RUNNER</string>
-    <string name="app_title_app">APP</string>
-    <string name="tagline">RUN. MEASURE. OVERCOME.</string>
+    <string name="app_title_runner">RUN</string>
+    <string name="app_title_app">BOOST</string>
+    <string name="tagline">BOOST YOUR PERFORMANCE</string>
 
     <!-- Auth -->
     <string name="hint_email">EMAIL</string>
@@ -154,7 +154,7 @@
     <!-- Running / Notifications -->
     <string name="msg_short_run">Run too short</string>
     <string name="msg_code_resent">Code resent to %1$s</string>
-    <string name="msg_share_run">Just ran %.2f km in %s with Runner App!</string>
+    <string name="msg_share_run">Just ran %.2f km in %s with RunBoost!</string>
     <string name="msg_share_chooser">Share run</string>
     <string name="notif_run_started">Run started – 0.00 km</string>
     <string name="notif_running">Running – %.2f km</string>

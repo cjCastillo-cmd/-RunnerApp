@@ -13,17 +13,17 @@
 
         <!-- Cabeza -->
         <path
-            android:fillColor="#C8FF00"
+            android:fillColor="#39D353"
             android:pathData="M56,28 a5,5 0 1,0 0.01,0z" />
 
         <!-- Torso inclinado -->
         <path
-            android:fillColor="#C8FF00"
+            android:fillColor="#39D353"
             android:pathData="M55,33 L50,38 L46,50 L50,50 L53,42 L58,38 Z" />
 
         <!-- Brazo trasero -->
         <path
-            android:strokeColor="#C8FF00"
+            android:strokeColor="#39D353"
             android:strokeWidth="3"
             android:strokeLineCap="round"
             android:pathData="M52,38 L44,34"
@@ -31,7 +31,7 @@
 
         <!-- Brazo delantero -->
         <path
-            android:strokeColor="#C8FF00"
+            android:strokeColor="#39D353"
             android:strokeWidth="3"
             android:strokeLineCap="round"
             android:pathData="M55,38 L63,42"
@@ -39,7 +39,7 @@
 
         <!-- Pierna trasera (extendida atras) -->
         <path
-            android:strokeColor="#C8FF00"
+            android:strokeColor="#39D353"
             android:strokeWidth="3.5"
             android:strokeLineCap="round"
             android:pathData="M48,50 L40,60 L36,68"
@@ -47,7 +47,7 @@
 
         <!-- Pierna delantera (extendida adelante) -->
         <path
-            android:strokeColor="#C8FF00"
+            android:strokeColor="#39D353"
             android:strokeWidth="3.5"
             android:strokeLineCap="round"
             android:pathData="M50,50 L58,60 L64,66"
@@ -55,7 +55,7 @@
 
         <!-- Pie trasero -->
         <path
-            android:strokeColor="#C8FF00"
+            android:strokeColor="#39D353"
             android:strokeWidth="2.5"
             android:strokeLineCap="round"
             android:pathData="M36,68 L33,68"
@@ -63,7 +63,7 @@
 
         <!-- Pie delantero -->
         <path
-            android:strokeColor="#C8FF00"
+            android:strokeColor="#39D353"
             android:strokeWidth="2.5"
             android:strokeLineCap="round"
             android:pathData="M64,66 L67,66"
@@ -71,21 +71,21 @@
 
         <!-- Lineas de velocidad -->
         <path
-            android:strokeColor="#C8FF00"
+            android:strokeColor="#39D353"
             android:strokeWidth="1.5"
             android:strokeLineCap="round"
             android:pathData="M34,40 L28,40"
             android:fillColor="#00000000"
             android:alpha="0.6" />
         <path
-            android:strokeColor="#C8FF00"
+            android:strokeColor="#39D353"
             android:strokeWidth="1.5"
             android:strokeLineCap="round"
             android:pathData="M36,46 L29,46"
             android:fillColor="#00000000"
             android:alpha="0.4" />
         <path
-            android:strokeColor="#C8FF00"
+            android:strokeColor="#39D353"
             android:strokeWidth="1.5"
             android:strokeLineCap="round"
             android:pathData="M35,52 L30,52"

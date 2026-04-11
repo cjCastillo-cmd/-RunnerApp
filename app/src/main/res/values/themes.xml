@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Tema principal RunnerApp — Soporta claro y oscuro -->
+    <!-- Tema principal RunBoost — Soporta claro y oscuro -->
     <style name="Theme.RunnerApp" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/accent</item>
         <item name="colorOnPrimary">@color/accent_on</item>
@@ -48,7 +48,7 @@
         <item name="android:textColorHint">@color/text_tertiary</item>
     </style>
 
-    <!-- Boton principal azul -->
+    <!-- Boton principal verde -->
     <style name="RunnerButton.Volt" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/accent</item>
         <item name="android:textColor">@color/white</item>
