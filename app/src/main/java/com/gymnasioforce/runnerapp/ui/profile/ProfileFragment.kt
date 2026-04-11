@@ -3,10 +3,12 @@ package com.gymnasioforce.runnerapp.ui.profile
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.*
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
@@ -31,8 +33,14 @@ class ProfileFragment : Fragment() {
     private lateinit var b: FragmentProfileBinding
     private val viewModel: ProfileViewModel by viewModels()
 
-    private val pickPhoto = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    private var cameraUri: Uri? = null
+
+    private val pickFromGallery = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { uploadPhoto(it) }
+    }
+
+    private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicture()) { success: Boolean ->
+        if (success) cameraUri?.let { uploadPhoto(it) }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
@@ -46,7 +54,7 @@ class ProfileFragment : Fragment() {
         setupThemeToggle()
         b.rvAchievements.layoutManager = LinearLayoutManager(requireContext())
 
-        b.ivAvatar.setOnClickListener { pickPhoto.launch("image/*") }
+        b.ivAvatar.setOnClickListener { showPhotoOptions() }
         b.btnSave.setOnClickListener { saveProfile() }
         b.btnLogout.setOnClickListener { doLogout() }
         b.btnDeleteAccount.setOnClickListener { confirmDeleteAccount() }
@@ -154,6 +162,31 @@ class ProfileFragment : Fragment() {
             return
         }
         viewModel.saveProfile(name, country)
+    }
+
+
+    private fun showPhotoOptions() {
+        val options = arrayOf("Camara", "Galeria")
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Foto de perfil")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> {
+                        val photoFile = File(
+                            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                            "profile_${System.currentTimeMillis()}.jpg"
+                        )
+                        cameraUri = FileProvider.getUriForFile(
+                            requireContext(),
+                            "${requireContext().packageName}.fileprovider",
+                            photoFile
+                        )
+                        takePhoto.launch(cameraUri!!)
+                    }
+                    1 -> pickFromGallery.launch("image/*")
+                }
+            }
+            .show()
     }
 
     private fun uploadPhoto(uri: Uri) {
