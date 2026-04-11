@@ -26,13 +26,17 @@ function register(): void {
     $stmt->execute([$name, $email, $hash, $country, (string)$code]);
     $userId = (int)db()->lastInsertId();
 
-    $response = [
-        'user_id' => $userId,
-        'message' => 'Registro exitoso. Revisa tu correo para verificar tu cuenta.',
-    ];
-    if (DEBUG_MODE) $response['debug_code'] = $code;
+    // Auto-verificar para demo
+    db()->prepare("UPDATE users SET email_verified = 1, verification_code = NULL WHERE id = ?")
+        ->execute([$userId]);
 
-    success($response, 201);
+    $token = createToken($userId);
+
+    $stmt = db()->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $newUser = userPublic($stmt->fetch());
+
+    success(['token' => $token, 'user' => $newUser], 201);
 }
 
 function verifyEmail(): void {

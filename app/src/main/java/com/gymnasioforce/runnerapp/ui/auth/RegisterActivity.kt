@@ -10,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import com.gymnasioforce.runnerapp.databinding.ActivityRegisterBinding
 import com.gymnasioforce.runnerapp.network.RegisterRequest
 import com.gymnasioforce.runnerapp.network.RetrofitClient
+import com.gymnasioforce.runnerapp.ui.main.MainActivity
+import com.gymnasioforce.runnerapp.utils.Prefs
 import com.gymnasioforce.runnerapp.utils.showToast
 import kotlinx.coroutines.launch
 
@@ -65,11 +67,19 @@ class RegisterActivity : BaseActivity() {
                     RegisterRequest(name, email, pass, confirm, country)
                 )
                 if (resp.isSuccessful && resp.body()?.success == true) {
+                    val auth = resp.body()?.data ?: run {
+                        showToast("Error procesando respuesta")
+                        return@launch
+                    }
+                    Prefs(this@RegisterActivity).apply {
+                        token = auth.token
+                        userId = auth.user.id
+                        userName = auth.user.name
+                    }
+                    RetrofitClient.setToken(auth.token)
                     showToast(getString(R.string.success_register))
-                    val intent = Intent(this@RegisterActivity, VerifyEmailActivity::class.java)
-                    intent.putExtra("email", email)
-                    startActivity(intent)
-                    finish()
+                    startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
+                    finishAffinity()
                 } else {
                     showToast(resp.body()?.message ?: "Error al registrarse")
                 }
