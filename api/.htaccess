@@ -1,5 +1,9 @@
 RewriteEngine On
 
+# Pasar header Authorization a PHP
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
 # Si el archivo o directorio existe, servirlo directamente (para uploads, etc.)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

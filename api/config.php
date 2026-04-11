@@ -57,7 +57,11 @@ function deleteUserTokens(int $userId): void {
 }
 
 function authUser(): array {
-    $header = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    // Apache a veces no pasa Authorization, intentar varias fuentes
+    $header = $_SERVER['HTTP_AUTHORIZATION']
+        ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
+        ?? apache_request_headers()['Authorization']
+        ?? '';
     if (!preg_match('/^Bearer\s+(.+)$/i', $header, $m)) {
         error('Token no proporcionado.', 401);
     }

@@ -30,30 +30,30 @@ $publicRoutes = [
 
 // Rutas protegidas (requieren Bearer token)
 $protectedRoutes = [
-    'POST auth/logout'       => 'auth.php@logout',
+    'POST auth/logout'        => 'auth.php@logout',
 
-    'GET  user/profile'      => 'user.php@profile',
-    'POST user/update'       => 'user.php@update',
-    'POST user/upload-photo' => 'user.php@uploadPhoto',
-    'GET  users/by-country'  => 'user.php@byCountry',
-    'POST user/fcm-token'    => 'user.php@updateFcmToken',
-    'DELETE user/account'    => 'user.php@deleteAccount',
+    'GET user/profile'        => 'user.php@profile',
+    'POST user/update'        => 'user.php@update',
+    'POST user/upload-photo'  => 'user.php@uploadPhoto',
+    'GET users/by-country'    => 'user.php@byCountry',
+    'POST user/fcm-token'     => 'user.php@updateFcmToken',
+    'DELETE user/account'     => 'user.php@deleteAccount',
 
-    'POST runs'              => 'runs.php@store',
-    'GET  runs'              => 'runs.php@index',
+    'POST runs'               => 'runs.php@store',
+    'GET runs'                => 'runs.php@index',
 
-    'POST friends/request'   => 'friends.php@sendRequest',
-    'POST friends/respond'   => 'friends.php@respond',
-    'GET  friends'           => 'friends.php@index',
-    'GET  friends/pending'   => 'friends.php@pending',
+    'POST friends/request'    => 'friends.php@sendRequest',
+    'POST friends/respond'    => 'friends.php@respond',
+    'GET friends'             => 'friends.php@index',
+    'GET friends/pending'     => 'friends.php@pending',
 
-    'GET  stats/monthly'         => 'stats.php@monthly',
-    'GET  stats/weekly-compare'  => 'stats.php@weeklyCompare',
-    'GET  stats/monthly-compare' => 'stats.php@monthlyCompare',
-    'GET  stats/leaderboard'     => 'stats.php@leaderboard',
+    'GET stats/monthly'         => 'stats.php@monthly',
+    'GET stats/weekly-compare'  => 'stats.php@weeklyCompare',
+    'GET stats/monthly-compare' => 'stats.php@monthlyCompare',
+    'GET stats/leaderboard'     => 'stats.php@leaderboard',
 
-    'GET  charts/weekly'    => 'charts.php@weeklyHistory',
-    'GET  charts/monthly'   => 'charts.php@monthlyHistory',
+    'GET charts/weekly'       => 'charts.php@weeklyHistory',
+    'GET charts/monthly'      => 'charts.php@monthlyHistory',
 ];
 
 // Rutas con parametros dinamicos (protegidas)
