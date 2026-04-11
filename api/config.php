@@ -2,8 +2,8 @@
 // Configuracion de la base de datos
 define('DB_HOST', '127.0.0.1');
 define('DB_NAME', 'runner_app');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_USER', 'runner');
+define('DB_PASS', 'runner123');
 
 // Modo debug (mostrar codigos de verificacion en respuesta)
 define('DEBUG_MODE', true);
