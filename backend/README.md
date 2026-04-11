@@ -53,7 +53,7 @@ php artisan serve
 La app se conecta al backend. El servidor esta en:
 
 ```
-http://34.172.180.141/runner_backend/public/api/
+http://34.172.180.141/api/
 ```
 
 ## Estructura de la API

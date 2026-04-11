@@ -29,7 +29,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://34.172.180.141/runner_backend/public/api/\"")
+            buildConfigField("String", "BASE_URL", "\"http://34.172.180.141/api/\"")
         }
         release {
             isMinifyEnabled = true
