@@ -96,5 +96,10 @@ function input(): array {
 
 function userPublic(array $user): array {
     unset($user['password'], $user['verification_code']);
+    // Convertir tipos para compatibilidad con Gson en Android
+    $user['id'] = (int)$user['id'];
+    $user['email_verified'] = (bool)$user['email_verified'];
+    $user['total_km'] = (float)$user['total_km'];
+    $user['total_calories'] = (int)$user['total_calories'];
     return $user;
 }

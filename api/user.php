@@ -69,14 +69,21 @@ function byCountry(): void {
     $params = array_merge([$user['country']], $friendIds);
 
     $stmt = db()->prepare("
-        SELECT id, name, country, photo_url, total_km
+        SELECT id, name, email, country, photo_url, total_km, total_calories, email_verified
         FROM users
         WHERE country = ? AND id NOT IN ($placeholders) AND email_verified = 1
         ORDER BY total_km DESC
         LIMIT 50
     ");
     $stmt->execute($params);
-    success($stmt->fetchAll());
+    $users = array_map(function($u) {
+        $u['id'] = (int)$u['id'];
+        $u['total_km'] = (float)$u['total_km'];
+        $u['total_calories'] = (int)$u['total_calories'];
+        $u['email_verified'] = (bool)$u['email_verified'];
+        return $u;
+    }, $stmt->fetchAll());
+    success($users);
 }
 
 function updateFcmToken(): void {

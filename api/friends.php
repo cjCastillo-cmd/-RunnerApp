@@ -73,18 +73,21 @@ function index(): void {
 
     $result = array_map(function($row) {
         return [
-            'id'        => $row['id'],
-            'user_id'   => $row['user_id'],
-            'friend_id' => $row['friend_id'],
+            'id'        => (int)$row['id'],
+            'user_id'   => (int)$row['user_id'],
+            'friend_id' => (int)$row['friend_id'],
             'status'    => $row['status'],
             'created_at'=> $row['created_at'],
             'updated_at'=> $row['updated_at'],
             'friend'    => [
-                'id'        => $row['friend_user_id'],
+                'id'        => (int)$row['friend_user_id'],
                 'name'      => $row['name'],
-                'country'   => $row['country'],
+                'country'   => $row['country'] ?? '',
                 'photo_url' => $row['photo_url'],
-                'total_km'  => $row['total_km'],
+                'total_km'  => (float)($row['total_km'] ?? 0),
+                'email_verified' => true,
+                'total_calories' => 0,
+                'email'     => '',
             ],
         ];
     }, $rows);
@@ -107,14 +110,14 @@ function pending(): void {
 
     $result = array_map(function($row) {
         return [
-            'id'        => $row['id'],
-            'user_id'   => $row['user_id'],
-            'friend_id' => $row['friend_id'],
+            'id'        => (int)$row['id'],
+            'user_id'   => (int)$row['user_id'],
+            'friend_id' => (int)$row['friend_id'],
             'status'    => $row['status'],
             'created_at'=> $row['created_at'],
             'updated_at'=> $row['updated_at'],
             'user'      => [
-                'id'        => $row['sender_id'],
+                'id'        => (int)$row['sender_id'],
                 'name'      => $row['name'],
                 'photo_url' => $row['photo_url'],
             ],
