@@ -5,6 +5,18 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
+// Mostrar errores en JSON para debug
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'data' => null, 'message' => "Error: $errstr en $errfile:$errline"]);
+    exit;
+});
+set_exception_handler(function($e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'data' => null, 'message' => "Exception: " . $e->getMessage()]);
+    exit;
+});
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
     exit;

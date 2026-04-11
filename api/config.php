@@ -60,8 +60,11 @@ function authUser(): array {
     // Apache a veces no pasa Authorization, intentar varias fuentes
     $header = $_SERVER['HTTP_AUTHORIZATION']
         ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
-        ?? apache_request_headers()['Authorization']
         ?? '';
+    if (!$header && function_exists('apache_request_headers')) {
+        $headers = apache_request_headers();
+        $header = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+    }
     if (!preg_match('/^Bearer\s+(.+)$/i', $header, $m)) {
         error('Token no proporcionado.', 401);
     }
