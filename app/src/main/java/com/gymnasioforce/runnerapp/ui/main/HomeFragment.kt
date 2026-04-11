@@ -39,9 +39,7 @@ class HomeFragment : Fragment() {
         b.swipeRefresh.setOnRefreshListener { viewModel.loadData() }
 
         observeViewModel()
-        if (viewModel.runs.value.isNullOrEmpty()) {
-            viewModel.loadData()
-        }
+        viewModel.loadData()
     }
 
     private fun observeViewModel() {

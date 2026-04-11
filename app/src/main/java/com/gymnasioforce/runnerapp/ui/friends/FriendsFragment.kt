@@ -31,9 +31,7 @@ class FriendsFragment : Fragment() {
         b.swipeRefresh.setOnRefreshListener { viewModel.loadAll() }
 
         observeViewModel()
-        if (viewModel.leaderboard.value.isNullOrEmpty()) {
-            viewModel.loadAll()
-        }
+        viewModel.loadAll()
     }
 
     private fun observeViewModel() {

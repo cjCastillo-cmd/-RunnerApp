@@ -30,9 +30,7 @@ class StatsFragment : Fragment() {
     override fun onViewCreated(view: View, state: Bundle?) {
         super.onViewCreated(view, state)
         observeViewModel()
-        if (viewModel.monthly.value == null) {
-            viewModel.loadAll()
-        }
+        viewModel.loadAll()
     }
 
     private fun observeViewModel() {
